@@ -1,33 +1,24 @@
 import type { Metadata } from "next";
 
 import { HomePageContent } from "@/features/home/components/home-page-content";
-import { fetchPageSeo } from "@/features/cms/api";
 import { metadataForPath } from "@/features/cms/metadata";
-import { env } from "@/utils/env";
+import { fetchSeoFaqs } from "@/features/seo/api";
+import { JsonLd, faqSchema } from "@/features/seo/structured-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   return metadataForPath("/");
 }
 
 export default async function Home() {
-  // The JSON-LD description is the same copy the CMS holds for this route, so
-  // structured data and the meta description can't disagree.
-  const seo = await fetchPageSeo("/");
+  const faqs = await fetchSeoFaqs();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "TravelAgency",
-    name: "TourPackage",
-    description: seo?.metaDescription ?? undefined,
-    url: env.appUrl,
-  };
-
+  // Organization and WebSite are emitted once in the root layout, so this page
+  // adds only what is specific to it. An earlier version declared its own
+  // TravelAgency node here, which became a second, thinner copy of the same
+  // entity the moment the layout gained one.
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      {faqs.length > 0 ? <JsonLd data={faqSchema(faqs)} /> : null}
       <HomePageContent />
     </>
   );

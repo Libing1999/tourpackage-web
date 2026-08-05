@@ -5,12 +5,14 @@ import Link from "next/link";
 import { ArrowLeft, Clock, UserRound } from "lucide-react";
 
 import { SiteNavbar } from "@/components/layout/site-navbar";
+import { buildMetadata, notFoundMetadata } from "@/features/seo/metadata";
+import { JsonLd, blogPostingSchema, breadcrumbSchema } from "@/features/seo/structured-data";
+import { fetchSeoSettings } from "@/features/seo/api";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { fetchBlogPost } from "@/features/cms/api";
 import { formatDate } from "@/utils/format";
-import { env } from "@/utils/env";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -21,29 +23,19 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const post = await fetchBlogPost(slug);
 
   if (!post) {
-    return { title: "Post Not Found" };
+    return notFoundMetadata("Post");
   }
 
   // A post's metadata comes from the post itself rather than a page_seo row —
   // there's one row per route there, and posts are unbounded.
-  const description = post.excerpt ?? post.content.slice(0, 160);
-  const url = `${env.appUrl}/blog/${post.slug}`;
-
-  return {
+  return buildMetadata({
     title: post.title,
-    description,
-    alternates: { canonical: url },
-    openGraph: {
-      title: post.title,
-      description,
-      url,
-      siteName: "TourPackage",
-      type: "article",
-      publishedTime: post.publishedAt,
-      images: post.coverImageUrl ? [{ url: post.coverImageUrl }] : undefined,
-    },
-    twitter: { card: "summary_large_image", title: post.title, description },
-  };
+    description: post.excerpt ?? post.content,
+    path: `/blog/${post.slug}`,
+    imageUrl: post.coverImageUrl,
+    type: "article",
+    publishedTime: post.publishedAt,
+  });
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -54,8 +46,30 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
+  const settings = await fetchSeoSettings();
+
   return (
     <div className="flex min-h-svh flex-col">
+      <JsonLd
+        data={[
+          blogPostingSchema(
+            {
+              title: post.title,
+              slug: post.slug,
+              excerpt: post.excerpt,
+              coverImageUrl: post.coverImageUrl,
+              publishedAt: post.publishedAt,
+              authorName: post.authorName,
+            },
+            settings
+          ),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${post.slug}` },
+          ]),
+        ]}
+      />
       <SiteNavbar />
       <main className="flex-1">
         <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">

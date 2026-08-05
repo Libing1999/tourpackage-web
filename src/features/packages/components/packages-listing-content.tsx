@@ -26,6 +26,9 @@ function parseFilters(params: URLSearchParams): PackageListFilters {
   return {
     search: params.get("q") ?? undefined,
     cityId: params.get("city") ?? undefined,
+    // Global search links a country result here; the API already accepted
+    // countryId, the listing just never read it off the URL.
+    countryId: params.get("country") ?? undefined,
     minPrice: params.get("minPrice") ? Number(params.get("minPrice")) : undefined,
     maxPrice: params.get("maxPrice") ? Number(params.get("maxPrice")) : undefined,
     minDurationDays: params.get("minDays") ? Number(params.get("minDays")) : undefined,
@@ -42,6 +45,7 @@ function toSearchParams(filters: PackageListFilters): URLSearchParams {
   const params = new URLSearchParams();
   if (filters.search) params.set("q", filters.search);
   if (filters.cityId) params.set("city", filters.cityId);
+  if (filters.countryId) params.set("country", filters.countryId);
   if (filters.minPrice !== undefined) params.set("minPrice", String(filters.minPrice));
   if (filters.maxPrice !== undefined) params.set("maxPrice", String(filters.maxPrice));
   if (filters.minDurationDays !== undefined) params.set("minDays", String(filters.minDurationDays));

@@ -6,6 +6,10 @@ import { ResetPasswordForm } from "@/features/auth/components/reset-password-for
 import { Spinner } from "@/components/common/spinner";
 
 export const metadata: Metadata = {
+  // Crawlable but not indexable, deliberately. robots.txt no longer disallows
+  // these: a Disallow would stop a crawler fetching the page, and a noindex it
+  // cannot fetch is a noindex it never reads.
+  robots: { index: false, follow: false },
   title: "Reset password — TourPackage",
 };
 

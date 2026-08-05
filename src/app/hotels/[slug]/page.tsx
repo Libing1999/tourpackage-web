@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { buildMetadata, notFoundMetadata } from "@/features/seo/metadata";
+import { JsonLd, breadcrumbSchema, hotelSchema } from "@/features/seo/structured-data";
 
 import { HotelDetailContent } from "@/features/hotels/components/hotel-detail-content";
 import type { ApiResponse } from "@/types/api";
@@ -30,33 +32,19 @@ export async function generateMetadata({ params }: HotelPageProps): Promise<Meta
   const hotel = await fetchHotel(slug);
 
   if (!hotel) {
-    return { title: "Hotel Not Found" };
+    return notFoundMetadata("Hotel");
   }
 
-  const title = hotel.metaTitle || `${hotel.name} — ${hotel.cityName}, ${hotel.countryName}`;
-  const description =
-    hotel.metaDescription || hotel.shortDescription || hotel.description?.slice(0, 160) || undefined;
-  const url = `${env.appUrl}/hotels/${hotel.slug}`;
-  const coverImage = hotel.images.find((img) => img.isCover)?.url ?? hotel.images[0]?.url;
+  return buildMetadata({
+    title: hotel.metaTitle || `${hotel.name} — ${hotel.cityName}, ${hotel.countryName}`,
+    description: hotel.metaDescription || hotel.shortDescription || hotel.description,
+    path: `/hotels/${hotel.slug}`,
+    imageUrl: coverImage(hotel.images),
+  });
+}
 
-  return {
-    title,
-    description,
-    alternates: { canonical: url },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: "TourPackage",
-      type: "website",
-      images: coverImage ? [{ url: coverImage }] : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
+function coverImage(images: { url: string; isCover: boolean }[]): string | undefined {
+  return images.find((img) => img.isCover)?.url ?? images[0]?.url;
 }
 
 export default async function HotelDetailPage({ params }: HotelPageProps) {
@@ -67,5 +55,35 @@ export default async function HotelDetailPage({ params }: HotelPageProps) {
     notFound();
   }
 
-  return <HotelDetailContent slug={slug} initialHotel={hotel} />;
+  return (
+    <>
+      <JsonLd
+        data={[
+          hotelSchema({
+            name: hotel.name,
+            slug: hotel.slug,
+            description: hotel.shortDescription || hotel.description,
+            images: hotel.images.map((img) => img.url),
+            cityName: hotel.cityName,
+            countryName: hotel.countryName,
+            address: [hotel.addressLine1, hotel.addressLine2].filter(Boolean).join(", "),
+            starRating: hotel.starRating,
+            basePrice: hotel.basePrice,
+            currencyCode: hotel.currencyCode,
+            // ratingCount of 0 means nobody has rated it; emitting an
+            // aggregateRating of 0 from 0 reviews is invalid structured data.
+            averageRating: hotel.ratingCount > 0 ? hotel.ratingAverage : null,
+            reviewCount: hotel.ratingCount || null,
+            amenities: hotel.amenities.map((a) => a.name),
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Hotels", path: "/hotels" },
+            { name: hotel.name, path: `/hotels/${hotel.slug}` },
+          ]),
+        ]}
+      />
+      <HotelDetailContent slug={slug} initialHotel={hotel} />
+    </>
+  );
 }

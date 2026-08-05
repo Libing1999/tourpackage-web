@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { buildMetadata, notFoundMetadata } from "@/features/seo/metadata";
+import { JsonLd, breadcrumbSchema, tourPackageSchema } from "@/features/seo/structured-data";
 
 import { PackageDetailContent } from "@/features/packages/components/package-detail-content";
 import type { ApiResponse } from "@/types/api";
@@ -30,33 +32,15 @@ export async function generateMetadata({ params }: PackagePageProps): Promise<Me
   const pkg = await fetchPackage(slug);
 
   if (!pkg) {
-    return { title: "Package Not Found" };
+    return notFoundMetadata("Package");
   }
 
-  const title = pkg.metaTitle || `${pkg.title} — ${pkg.durationDays} Days in ${pkg.cityName}`;
-  const description =
-    pkg.metaDescription || pkg.summary || pkg.description?.slice(0, 160) || undefined;
-  const url = `${env.appUrl}/packages/${pkg.slug}`;
-  const coverImage = pkg.images.find((img) => img.isCover)?.url ?? pkg.images[0]?.url;
-
-  return {
-    title,
-    description,
-    alternates: { canonical: url },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: "TourPackage",
-      type: "website",
-      images: coverImage ? [{ url: coverImage }] : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
+  return buildMetadata({
+    title: pkg.metaTitle || `${pkg.title} — ${pkg.durationDays} Days in ${pkg.cityName}`,
+    description: pkg.metaDescription || pkg.summary || pkg.description,
+    path: `/packages/${pkg.slug}`,
+    imageUrl: pkg.images.find((img) => img.isCover)?.url ?? pkg.images[0]?.url,
+  });
 }
 
 export default async function PackageDetailPage({ params }: PackagePageProps) {
@@ -67,5 +51,35 @@ export default async function PackageDetailPage({ params }: PackagePageProps) {
     notFound();
   }
 
-  return <PackageDetailContent slug={slug} initialPackage={pkg} />;
+  return (
+    <>
+      <JsonLd
+        data={[
+          tourPackageSchema({
+            title: pkg.title,
+            slug: pkg.slug,
+            description: pkg.summary || pkg.description,
+            images: pkg.images.map((img) => img.url),
+            cityName: pkg.cityName,
+            countryName: pkg.countryName,
+            price: pkg.price,
+            discountedPrice: pkg.discountPrice,
+            currencyCode: pkg.currencyCode,
+            averageRating: pkg.ratingCount > 0 ? pkg.ratingAverage : null,
+            reviewCount: pkg.ratingCount || null,
+            itinerary: pkg.itinerary.map((day) => ({
+              title: day.title,
+              description: day.description,
+            })),
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Packages", path: "/packages" },
+            { name: pkg.title, path: `/packages/${pkg.slug}` },
+          ]),
+        ]}
+      />
+      <PackageDetailContent slug={slug} initialPackage={pkg} />
+    </>
+  );
 }

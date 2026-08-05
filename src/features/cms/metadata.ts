@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { env } from "@/utils/env";
+import { buildMetadata } from "@/features/seo/metadata";
 import { fetchPageSeo } from "./api";
 
 /**
@@ -21,29 +21,15 @@ export async function metadataForPath(path: string): Promise<Metadata> {
     return {};
   }
 
-  const url = `${env.appUrl}${path}`;
-  const description = seo.metaDescription ?? undefined;
-
-  return {
-    // `absolute` so a CMS-authored title is used exactly as written, instead of
-    // picking up the layout's "%s — TourPackage" suffix on top of a title that
-    // usually already names the brand.
-    title: { absolute: seo.metaTitle },
-    description,
-    alternates: { canonical: url },
-    robots: seo.noIndex ? { index: false, follow: false } : undefined,
-    openGraph: {
-      title: seo.metaTitle,
-      description,
-      url,
-      siteName: "TourPackage",
-      type: "website",
-      images: seo.ogImageUrl ? [{ url: seo.ogImageUrl }] : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: seo.metaTitle,
-      description,
-    },
-  };
+  return buildMetadata({
+    title: seo.metaTitle,
+    description: seo.metaDescription,
+    path,
+    imageUrl: seo.ogImageUrl,
+    noIndex: seo.noIndex,
+    // A CMS-authored title is used exactly as written, rather than picking up
+    // the layout's "%s — TourPackage" suffix on top of one that usually already
+    // names the brand.
+    absoluteTitle: true,
+  });
 }

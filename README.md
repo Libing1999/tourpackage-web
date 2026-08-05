@@ -456,6 +456,137 @@ bodies so the browser can set `multipart/form-data` with its own boundary. Worth
 surfaced: the server returned a generic 500 and its catch-all handler logged nothing at all, so the
 first fix was to make that handler log the stack trace.
 
+## Global Search
+
+A search box in the navbar (and inside the mobile menu) with an autocomplete dropdown, plus a
+paginated `/search` results page with type tabs.
+
+### Debouncing, and the second half of it
+
+`useDebounced` holds the input for 250ms so a typist doesn't fire a request per keystroke —
+measured at **1 suggest request for the 4 keystrokes of "bali"**. The other half is the TanStack
+Query key: it is the *debounced* term, so re-typing something already searched renders from cache
+without a request at all.
+
+### Before anything is typed
+
+Focusing the box opens the panel on recent and popular searches, so it is useful immediately rather
+than only after input. Recent searches are localStorage, not server state — the site has no visitor
+accounts, so there is nobody to attach a history to, and "what I personally searched" should stay on
+the device that searched it. Reads happen after mount rather than during render, because
+localStorage doesn't exist on the server and seeding state from it would mismatch the SSR markup.
+
+### Keyboard
+
+Arrow keys walk the flattened result list and wrap at both ends; Enter opens the highlighted result
+or, with nothing highlighted, submits the term; Escape closes. The dropdown renders as groups but is
+flattened once for navigation so the highlighted index and the rendered order cannot disagree.
+
+### URL as state
+
+The results page keeps the query, tab and page number in the URL. A search result page is something
+people bookmark, share and reload, and all three need to survive that. Changing the query or tab
+resets to page 0 — page 4 of the previous search is meaningless for the new one, and usually empty.
+
+### Two bugs the screenshots caught
+
+**The results page had no navbar or footer.** Every public page in this app renders its own
+`SiteNavbar` / `main` / `SiteFooter` rather than inheriting them from a layout, and the new page
+didn't. It rendered perfectly well and had no way to navigate anywhere.
+
+**The logo collided with the first nav link.** The search box takes `flex-1`, which left nothing for
+the navbar's `justify-between` to distribute, so the two sat flush against each other. Fixed with an
+explicit `lg:gap-6` — scoped to `lg` because that is where the search box appears, and adding it at
+`md` only made an already-overflowing row wider.
+
+## SEO
+
+### Where each tag comes from
+
+| Route kind | Title & description | Image |
+|---|---|---|
+| Static pages (`/`, `/hotels`, `/contact`, …) | `page_seo` row in the CMS | `page_seo.og_image_url` |
+| Hotel / package detail | the entity's own `metaTitle`/`metaDescription`, falling back to its summary | cover image |
+| Blog post | the post's title and excerpt | cover image |
+
+All of it is assembled by one builder, [`buildMetadata`](src/features/seo/metadata.ts). Four routes
+used to hand-roll the same object, and all four had drifted apart — every one of them declared a
+`summary_large_image` Twitter card and then supplied **no image for it**, which silently downgrades
+to a small card. Centralising fixed all four at once, and the card type is now derived from whether
+an image exists rather than asserted.
+
+Descriptions are truncated to 160 characters on a word boundary. Several of them come from the first
+160 characters of a body, which routinely lands mid-word.
+
+### Structured data
+
+`Organization` (as `TravelAgency`) and `WebSite` are emitted once in the root layout, so a crawler
+landing on any page learns who runs the site. Both are built from the same `settings` rows the footer
+renders — including `sameAs` from the social links, which is what ties the site to its profiles.
+`WebSite` carries a `SearchAction` pointing at `/search?q={search_term_string}`, the global search
+route.
+
+Per-page: `Hotel` (with `starRating` and `aggregateRating` kept distinct — they are different
+properties and conflating them is a common mistake), `TouristTrip` with an `Offer` at the
+discounted price and the itinerary as an `ItemList`, `BlogPosting`, `FAQPage` on the homepage, and
+`BreadcrumbList` on every detail page.
+
+An `aggregateRating` is only emitted when `ratingCount > 0` — "rated 0 by 0 people" is invalid
+structured data, not a neutral default.
+
+The homepage previously declared its own thin `TravelAgency` node. Once the layout gained a richer
+one, that became a second conflicting copy of the same entity on the same page, and it was removed.
+
+### robots.txt and noindex are not interchangeable
+
+`robots.txt` disallows only `/dashboard`, `/search` and `/api/` — surfaces a crawler should never
+fetch at all. Everything else that must stay out of the index (the auth pages, `/profile`,
+`/bookings`, the booking flow) carries a **`noindex` meta tag** and is deliberately *not* disallowed:
+a `Disallow` stops the crawler fetching the page, and a noindex it never fetches is a noindex it
+never reads. Blocking and noindexing the same URL leaves it indexable-by-reference with no
+description — the opposite of the intent.
+
+The sitemap and robots list are kept consistent by construction: nothing disallowed appears in the
+sitemap, which is verified rather than assumed.
+
+### Sitemap
+
+`sitemap.xml` is generated from `/public/seo/sitemap`, which returns slugs and `updatedAt` only.
+`lastModified` on detail pages is the real database timestamp, which is the one field in a sitemap a
+crawler acts on — it decides what to re-fetch. A failed fetch degrades to the static routes rather
+than 500ing, because a 500 on `/sitemap.xml` tells a crawler the whole file is broken.
+
+## Production Readiness
+
+### Tests
+
+`yarn test` runs Vitest over the pure logic that carries real risk: URL construction, description
+truncation, card-type selection, and every structured-data builder. The environment is `node`, not
+jsdom — none of this touches the DOM, and jsdom's `whatwg-url` dependency requires Node 22 while this
+project targets 20. Component behaviour is covered by the Playwright passes, which drive a real
+browser rather than a simulated one.
+
+Writing these split `structured-data.tsx` into a pure `schemas.ts` plus the component that renders
+them, which is the better boundary regardless: the builders are functions of their inputs and now
+testable without parsing JSX.
+
+### Typecheck in CI
+
+`yarn tsc --noEmit` runs as its own CI step rather than relying on `next build`. It immediately
+earned that: it caught type errors in a test file that ESLint passed cleanly.
+
+### Security headers
+
+Set in `next.config.ts` for every route: `nosniff`, `SAMEORIGIN`, `strict-origin-when-cross-origin`
+(password-reset links carry tokens in the query string), a `Permissions-Policy` denying camera,
+microphone, geolocation and payment, and HSTS. `poweredByHeader` is off.
+
+### CI
+
+Lint, typecheck, unit tests, build, then a Docker image build. `--frozen-lockfile` so CI fails on a
+lockfile that disagrees with `package.json` rather than silently resolving different versions than a
+developer got.
+
 ## Getting Started
 
 ### Prerequisites

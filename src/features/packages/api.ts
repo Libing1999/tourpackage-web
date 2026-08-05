@@ -19,6 +19,7 @@ export const packagesApi = {
         params: {
           search: filters.search || undefined,
           cityId: filters.cityId,
+          countryId: filters.countryId,
           minPrice: filters.minPrice,
           maxPrice: filters.maxPrice,
           minDurationDays: filters.minDurationDays,

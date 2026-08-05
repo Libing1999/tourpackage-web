@@ -6,6 +6,10 @@ import { AuthCard } from "@/features/auth/components/auth-card";
 import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-form";
 
 export const metadata: Metadata = {
+  // Crawlable but not indexable, deliberately. robots.txt no longer disallows
+  // these: a Disallow would stop a crawler fetching the page, and a noindex it
+  // cannot fetch is a noindex it never reads.
+  robots: { index: false, follow: false },
   title: "Forgot password — TourPackage",
 };
 

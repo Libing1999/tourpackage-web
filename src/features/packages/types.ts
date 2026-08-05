@@ -69,6 +69,7 @@ export type PackageSortOption =
 export interface PackageListFilters {
   search?: string;
   cityId?: string;
+  countryId?: string;
   minPrice?: number;
   maxPrice?: number;
   minDurationDays?: number;
