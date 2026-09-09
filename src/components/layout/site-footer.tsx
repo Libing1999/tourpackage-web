@@ -34,7 +34,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex flex-col gap-3">
             <Logo />
             {isPending ? (
@@ -110,16 +110,6 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">Business Hours</h3>
-            <div className="mt-4">
-              {isPending ? (
-                <Skeleton className="h-4 w-32" />
-              ) : (
-                <p className="text-sm text-muted-foreground">{settings?.business_hours}</p>
-              )}
-            </div>
-          </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t pt-6 sm:flex-row">

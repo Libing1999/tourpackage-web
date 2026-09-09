@@ -45,10 +45,10 @@ export function PackageCard({ pkg }: { pkg: TourPackageSummary }) {
           </div>
           <div className="text-right">
             {hasDiscount ? (
-              <p className="text-xs text-muted-foreground line-through">{formatCurrency(pkg.price)}</p>
+              <p className="text-xs text-muted-foreground line-through">{formatCurrency(pkg.price, pkg.currencyCode)}</p>
             ) : null}
             <p className="font-semibold text-foreground">
-              {formatCurrency(hasDiscount ? pkg.discountPrice! : pkg.price)}
+              {formatCurrency(hasDiscount ? pkg.discountPrice! : pkg.price, pkg.currencyCode)}
             </p>
           </div>
         </div>

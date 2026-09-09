@@ -43,6 +43,7 @@ export interface TourPackageSummary {
   discountPrice: number | null;
   ratingAverage: number;
   ratingCount: number;
+  currencyCode: string;
 }
 
 export interface Testimonial {

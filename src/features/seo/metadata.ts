@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { env } from "@/utils/env";
 
-export const SITE_NAME = "TourPackage";
+export const SITE_NAME = "Tour Leh Ladakh";
 
 /** Truncated to roughly what Google renders before it starts eliding. */
 const MAX_DESCRIPTION = 160;

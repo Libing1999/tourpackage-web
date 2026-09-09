@@ -41,7 +41,9 @@ export function useBookingForms() {
 
   const paymentForm = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
-    defaultValues: { paymentMethod: "CREDIT_CARD", specialRequests: "" },
+    // Payment isn't collected in the form — the team arranges it after the
+    // booking is placed — so this default just satisfies the request payload.
+    defaultValues: { paymentMethod: "BANK_TRANSFER", specialRequests: "" },
   });
 
   /** Shapes the traveller rows for the API: blank optional fields become null,

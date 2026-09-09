@@ -1,13 +1,12 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 import { SiteNavbar } from "@/components/layout/site-navbar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { GoogleMap } from "@/components/common/google-map";
 import { Skeleton } from "@/components/ui/skeleton";
-import { NewsletterSection } from "@/features/home/components/newsletter-section";
 import { usePublicSettings } from "@/features/home/hooks/use-home";
 import { useBlock } from "@/features/cms/site-content-provider";
 import { InquiryForm } from "./inquiry-form";
@@ -36,13 +35,11 @@ export function ContactPageContent() {
   const address = settings?.contact_address;
   const email = settings?.contact_email;
   const phone = settings?.contact_phone;
-  const businessHours = settings?.business_hours;
 
   const details: ContactDetail[] = [
     { icon: Mail, label: "Email", value: email, href: email ? `mailto:${email}` : undefined },
     { icon: Phone, label: "Phone", value: phone, href: phone ? `tel:${phone.replace(/\s/g, "")}` : undefined },
     { icon: MapPin, label: "Office", value: address },
-    { icon: Clock, label: "Business hours", value: businessHours },
   ];
 
   return (
@@ -65,8 +62,8 @@ export function ContactPageContent() {
             <div className="rounded-2xl border bg-background p-6 sm:p-8">
               <h2 className="text-lg font-semibold text-foreground">Send us a message</h2>
               <p className="mb-6 mt-1 text-sm text-muted-foreground">
-                Fields marked optional help us answer faster, but skip them if you&apos;re just
-                asking a question.
+                Tell us a little about your trip and we&apos;ll get back to you. Fields marked with{" "}
+                <span className="text-destructive">*</span> are required.
               </p>
               <InquiryForm packageId={packageId} packageTitle={packageTitle} />
             </div>
@@ -105,8 +102,6 @@ export function ContactPageContent() {
             </aside>
           </div>
         </div>
-
-        <NewsletterSection />
       </main>
       <SiteFooter />
     </div>

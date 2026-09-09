@@ -8,9 +8,7 @@ import { TopHotels } from "./top-hotels";
 import { BestPackages } from "./best-packages";
 import { SpecialOffers } from "./special-offers";
 import { Testimonials } from "./testimonials";
-import { TravelBlogs } from "./travel-blogs";
 import { FaqSection } from "./faq-section";
-import { NewsletterSection } from "./newsletter-section";
 
 export function HomePageContent() {
   return (
@@ -23,9 +21,7 @@ export function HomePageContent() {
         <BestPackages />
         <SpecialOffers />
         <Testimonials />
-        <TravelBlogs />
         <FaqSection />
-        <NewsletterSection />
       </main>
       <SiteFooter />
     </div>

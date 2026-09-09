@@ -1,31 +1,13 @@
 "use client";
 
 import type { UseFormReturn } from "react-hook-form";
-import { CreditCard } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Spinner } from "@/components/common/spinner";
-import { PAYMENT_METHODS, type GuestFormValues, type PaymentFormValues, type TravellersFormValues } from "../../schemas";
-import type { PaymentMethod } from "../../types";
-
-const PAYMENT_LABELS: Record<PaymentMethod, string> = {
-  CREDIT_CARD: "Credit card",
-  DEBIT_CARD: "Debit card",
-  PAYPAL: "PayPal",
-  BANK_TRANSFER: "Bank transfer",
-  CASH: "Pay on arrival",
-  WALLET: "Wallet",
-};
+import type { GuestFormValues, PaymentFormValues, TravellersFormValues } from "../../schemas";
 
 interface ReviewPaymentStepProps {
   guestForm: UseFormReturn<GuestFormValues>;
@@ -46,7 +28,7 @@ export function ReviewPaymentStep({
 
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
-      <h2 className="font-semibold text-foreground">Review &amp; payment</h2>
+      <h2 className="font-semibold text-foreground">Review &amp; confirm</h2>
 
       <div className="rounded-xl border p-4 text-sm">
         <p className="font-medium text-foreground">
@@ -66,38 +48,6 @@ export function ReviewPaymentStep({
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <Label>Payment method</Label>
-        <Select
-          value={paymentForm.watch("paymentMethod")}
-          onValueChange={(v) => paymentForm.setValue("paymentMethod", v as PaymentMethod)}
-        >
-          <SelectTrigger className="w-full" aria-label="Payment method">
-            <SelectValue placeholder="Choose a payment method">
-              {(value: PaymentMethod | null) =>
-                value ? PAYMENT_LABELS[value] : "Choose a payment method"
-              }
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {PAYMENT_METHODS.map((m) => (
-              <SelectItem key={m} value={m}>
-                {PAYMENT_LABELS[m]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="flex items-start gap-3 rounded-xl border border-dashed p-4">
-        <CreditCard className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-        <p className="text-sm text-muted-foreground">
-          No payment is taken now — this is a placeholder while payment processing is being set up.
-          Your booking will be held as <strong>pending</strong> and our team will contact you to
-          arrange payment.
-        </p>
       </div>
 
       <div className="flex flex-col gap-1.5">
