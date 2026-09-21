@@ -99,6 +99,19 @@ export function SiteFooter() {
                       </a>
                     </li>
                   ) : null}
+                  {settings?.contact_whatsapp ? (
+                    <li className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <MessageCircle className="mt-0.5 size-4 shrink-0" />
+                      <a
+                        href={`https://wa.me/${settings.contact_whatsapp.replace(/\D/g, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-foreground"
+                      >
+                        {settings.contact_whatsapp} (WhatsApp)
+                      </a>
+                    </li>
+                  ) : null}
                   {settings?.contact_address ? (
                     <li className="flex items-start gap-2 text-sm text-muted-foreground">
                       <MapPin className="mt-0.5 size-4 shrink-0" />

@@ -17,6 +17,7 @@ import { useCreatePackageBooking } from "../hooks/use-booking";
 import { useBookingForms, routeSubmitError } from "../hooks/use-booking-forms";
 import { packageTripSchema, type PackageTripFormValues } from "../schemas";
 import { BookingStepper, PACKAGE_BOOKING_STEPS } from "./booking-stepper";
+import { BookingPolicies } from "./booking-policies";
 import { PackageSummaryCard } from "./package-summary-card";
 import { GuestDetailsStep } from "./steps/guest-details-step";
 import { TravellersStep } from "./steps/travellers-step";
@@ -278,6 +279,8 @@ export function PackageBookingFlow({ pkg }: { pkg: TourPackageDetail }) {
               </div>
             </aside>
           </div>
+
+          <BookingPolicies />
         </div>
       </main>
       <SiteFooter />

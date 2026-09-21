@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { SiteNavbar } from "@/components/layout/site-navbar";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -35,10 +35,17 @@ export function ContactPageContent() {
   const address = settings?.contact_address;
   const email = settings?.contact_email;
   const phone = settings?.contact_phone;
+  const whatsapp = settings?.contact_whatsapp;
 
   const details: ContactDetail[] = [
     { icon: Mail, label: "Email", value: email, href: email ? `mailto:${email}` : undefined },
     { icon: Phone, label: "Phone", value: phone, href: phone ? `tel:${phone.replace(/\s/g, "")}` : undefined },
+    {
+      icon: MessageCircle,
+      label: "WhatsApp",
+      value: whatsapp,
+      href: whatsapp ? `https://wa.me/${whatsapp.replace(/\D/g, "")}` : undefined,
+    },
     { icon: MapPin, label: "Office", value: address },
   ];
 

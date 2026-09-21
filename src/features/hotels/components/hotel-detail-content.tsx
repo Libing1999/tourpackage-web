@@ -120,8 +120,14 @@ export function HotelDetailContent({ slug, initialHotel }: { slug: string; initi
               <div className="sticky top-24 rounded-2xl border bg-background p-5">
                 <p className="text-sm text-muted-foreground">Starting from</p>
                 <p className="text-2xl font-bold text-foreground">
-                  {formatCurrency(hotel.basePrice, hotel.currencyCode)}
-                  <span className="text-sm font-normal text-muted-foreground"> /night</span>
+                  {hotel.basePrice > 0 ? (
+                    <>
+                      {formatCurrency(hotel.basePrice, hotel.currencyCode)}
+                      <span className="text-sm font-normal text-muted-foreground"> /night</span>
+                    </>
+                  ) : (
+                    "Rate on request"
+                  )}
                 </p>
                 <Separator className="my-4" />
                 <dl className="flex flex-col gap-2 text-sm">

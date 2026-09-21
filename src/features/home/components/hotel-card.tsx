@@ -3,10 +3,22 @@ import { MapPin, Star } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/format";
 import type { HotelSummary } from "../types";
 
+/** Premium (5★) and Budget (3★) are encoded in the star rating, so the star
+ * filter doubles as a tier filter and the card can show the tier explicitly. */
+function hotelTier(starRating: number | null): "Premium" | "Budget" | null {
+  if (starRating == null) return null;
+  if (starRating >= 5) return "Premium";
+  if (starRating <= 3) return "Budget";
+  return null;
+}
+
 export function HotelCard({ hotel }: { hotel: HotelSummary }) {
+  const tier = hotelTier(hotel.starRating);
+
   return (
     <Card className="group overflow-hidden py-0">
       <div className="relative aspect-[4/3] w-full overflow-hidden">
@@ -26,6 +38,18 @@ export function HotelCard({ hotel }: { hotel: HotelSummary }) {
             {hotel.starRating} <Star className="size-3 fill-current" />
           </Badge>
         ) : null}
+        {tier ? (
+          <Badge
+            className={cn(
+              "absolute right-3 top-3",
+              tier === "Premium"
+                ? "bg-amber-500 text-white"
+                : "bg-secondary text-secondary-foreground"
+            )}
+          >
+            {tier}
+          </Badge>
+        ) : null}
       </div>
       <CardContent className="flex flex-col gap-1.5 p-4">
         <h3 className="line-clamp-1 font-semibold text-foreground">{hotel.name}</h3>
@@ -39,10 +63,17 @@ export function HotelCard({ hotel }: { hotel: HotelSummary }) {
             <span className="font-medium text-foreground">{hotel.ratingAverage.toFixed(1)}</span>
             <span>({hotel.ratingCount})</span>
           </div>
-          <p className="text-sm text-muted-foreground">
-            from <span className="font-semibold text-foreground">{formatCurrency(hotel.basePrice, hotel.currencyCode)}</span>
-            /night
-          </p>
+          {hotel.basePrice > 0 ? (
+            <p className="text-sm text-muted-foreground">
+              from{" "}
+              <span className="font-semibold text-foreground">
+                {formatCurrency(hotel.basePrice, hotel.currencyCode)}
+              </span>
+              /night
+            </p>
+          ) : (
+            <p className="text-sm font-medium text-foreground">Rate on request</p>
+          )}
         </div>
       </CardContent>
     </Card>

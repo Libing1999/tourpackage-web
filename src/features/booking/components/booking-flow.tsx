@@ -25,6 +25,7 @@ import { useCreateHotelBooking } from "../hooks/use-booking";
 import { useBookingForms, routeSubmitError } from "../hooks/use-booking-forms";
 import { staySchema, type StayFormValues } from "../schemas";
 import { BookingStepper } from "./booking-stepper";
+import { BookingPolicies } from "./booking-policies";
 import { BookingSummaryCard } from "./booking-summary-card";
 import { GuestDetailsStep } from "./steps/guest-details-step";
 import { TravellersStep } from "./steps/travellers-step";
@@ -314,6 +315,8 @@ export function BookingFlow({ hotel, initialRoomId }: BookingFlowProps) {
               </div>
             </aside>
           </div>
+
+          <BookingPolicies />
         </div>
       </main>
       <SiteFooter />
