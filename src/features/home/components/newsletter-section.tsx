@@ -34,9 +34,14 @@ export function NewsletterSection() {
   });
 
   return (
-    <section id="newsletter" className="bg-primary py-16 text-primary-foreground lg:py-20">
+    <section
+      id="newsletter"
+      className="relative overflow-hidden bg-primary bg-[radial-gradient(ellipse_at_top_right,oklch(1_0_0/0.14),transparent_60%)] py-16 text-primary-foreground lg:py-20"
+    >
       <Reveal className="mx-auto flex max-w-2xl flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-8">
-        <Mail className="size-8" />
+        <span className="flex size-14 items-center justify-center rounded-2xl bg-primary-foreground/10 ring-1 ring-primary-foreground/20">
+          <Mail className="size-7" />
+        </span>
         {block?.title ? (
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{block.title}</h2>
         ) : null}

@@ -29,7 +29,7 @@ export function PackageSummaryCard({
   const returnDate = travelDate ? addDaysIso(travelDate, pkg.durationDays - 1) : undefined;
 
   return (
-    <div className="rounded-2xl border bg-background p-5">
+    <div className="rounded-2xl border bg-card shadow-card p-5">
       <h2 className="font-semibold text-foreground">{pkg.title}</h2>
       <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
         <MapPin className="size-3.5" />

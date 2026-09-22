@@ -18,28 +18,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Installs the pnpm version pinned in package.json#packageManager.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: yarn
+          node-version: "24"
+          cache: pnpm
 
       # --frozen-lockfile: CI must fail on a lockfile that disagrees with
       # package.json rather than quietly resolving different versions than a
       # developer got.
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Typecheck
-        run: yarn tsc --noEmit
+        run: pnpm exec tsc --noEmit
 
       - name: Unit tests
-        run: yarn test
+        run: pnpm test
 
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           # Build-time public values. The real deployment supplies its own; these
           # only need to be well-formed for the build to complete.

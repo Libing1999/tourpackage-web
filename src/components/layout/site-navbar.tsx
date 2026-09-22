@@ -35,34 +35,44 @@ export function SiteNavbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full transition-colors duration-200",
+        "sticky top-0 z-40 w-full transition-[background-color,border-color,box-shadow] duration-300",
         overlay
           ? "border-b border-transparent bg-transparent"
-          : "border-b bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60"
+          : "border-b bg-background/80 shadow-[0_1px_12px_-6px_oklch(0.2_0.05_265/0.12)] backdrop-blur-md supports-backdrop-filter:bg-background/70"
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* next/link keeps navigation client-side — switching pages swaps the
             content in place without a full document reload. */}
-        <Link href="/">
+        <Link href="/" className="rounded-md transition-opacity hover:opacity-85 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none">
           <Logo className={cn(overlay && "text-white")} />
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.id}
-              href={link.href}
-              className={cn(
-                "text-sm font-medium transition-colors",
-                overlay
-                  ? "text-white/85 hover:text-white"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.id}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  // The underline grows from the centre on hover and stays
+                  // drawn for the current section.
+                  "relative py-1 text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-center after:scale-x-0 after:rounded-full after:transition-transform after:duration-300 after:ease-out-soft hover:after:scale-x-100",
+                  active && "after:scale-x-100",
+                  overlay
+                    ? "text-white/85 after:bg-white hover:text-white"
+                    : cn(
+                        "after:bg-primary hover:text-foreground",
+                        active ? "text-foreground" : "text-muted-foreground"
+                      )
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className={cn("hidden items-center gap-2 md:flex", overlay && "text-white")}>
@@ -88,7 +98,7 @@ export function SiteNavbar() {
                     render={
                       <Link
                         href={link.href}
-                        className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
+                        className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                       >
                         {link.label}
                       </Link>

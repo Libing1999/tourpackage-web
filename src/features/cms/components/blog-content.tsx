@@ -30,18 +30,18 @@ export function BlogContent() {
     <div className="flex min-h-svh flex-col">
       <SiteNavbar />
       <main className="flex-1">
-        <section className="border-b bg-muted/20">
-          <div className="mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 lg:px-8">
+        <section className="border-b bg-gradient-to-b from-primary/[0.06] to-transparent">
+          <div className="mx-auto max-w-3xl animate-rise px-4 py-16 text-center sm:px-6 lg:px-8">
             {heading?.eyebrow ? (
-              <p className="text-sm font-semibold tracking-wider text-primary uppercase">
+              <p className="inline-flex items-center gap-2 rounded-full bg-primary/[0.07] px-3 py-1 text-xs font-semibold tracking-[0.14em] text-primary uppercase ring-1 ring-primary/10">
                 {heading.eyebrow}
               </p>
             ) : null}
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               {heading?.title}
             </h1>
             {heading?.subtitle ? (
-              <p className="mt-3 text-muted-foreground">{heading.subtitle}</p>
+              <p className="mt-4 text-muted-foreground">{heading.subtitle}</p>
             ) : null}
           </div>
         </section>

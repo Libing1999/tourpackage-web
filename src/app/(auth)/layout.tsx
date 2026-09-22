@@ -7,7 +7,7 @@ import { GuestGuard } from "@/features/auth/components/guest-guard";
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <GuestGuard>
-      <div className="flex min-h-svh flex-col bg-muted/30">
+      <div className="flex min-h-svh flex-col bg-muted/30 bg-[radial-gradient(ellipse_at_top,oklch(0.55_0.17_262/0.08),transparent_60%)]">
         <header className="flex items-center justify-between p-4 sm:p-6">
           <Logo />
           <ThemeToggle />

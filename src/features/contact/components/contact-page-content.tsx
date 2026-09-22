@@ -9,6 +9,7 @@ import { GoogleMap } from "@/components/common/google-map";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePublicSettings } from "@/features/home/hooks/use-home";
 import { useBlock } from "@/features/cms/site-content-provider";
+import { Reveal } from "@/components/common/reveal";
 import { InquiryForm } from "./inquiry-form";
 
 /** Shown only until `/public/settings` answers — the real values come from the
@@ -53,12 +54,12 @@ export function ContactPageContent() {
     <div className="flex min-h-svh flex-col">
       <SiteNavbar />
       <main className="flex-1">
-        <section className="border-b bg-muted/20">
-          <div className="mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden border-b bg-gradient-to-b from-primary/[0.06] to-transparent">
+          <div className="mx-auto max-w-3xl animate-rise px-4 py-16 text-center sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               {hero?.title}
             </h1>
-            {hero?.subtitle ? <p className="mt-3 text-muted-foreground">{hero.subtitle}</p> : null}
+            {hero?.subtitle ? <p className="mt-4 text-muted-foreground">{hero.subtitle}</p> : null}
           </div>
         </section>
 
@@ -66,29 +67,31 @@ export function ContactPageContent() {
           {/* items-start so the form card sizes to its content instead of
               stretching to match the taller sidebar column. */}
           <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_360px]">
-            <div className="rounded-2xl border bg-background p-6 sm:p-8">
+            <Reveal direction="left" className="rounded-2xl border bg-card p-6 shadow-card sm:p-8">
               <h2 className="text-lg font-semibold text-foreground">Send us a message</h2>
               <p className="mb-6 mt-1 text-sm text-muted-foreground">
                 Tell us a little about your trip and we&apos;ll get back to you. Fields marked with{" "}
                 <span className="text-destructive">*</span> are required.
               </p>
               <InquiryForm packageId={packageId} packageTitle={packageTitle} />
-            </div>
+            </Reveal>
 
-            <aside className="flex flex-col gap-6">
-              <div className="rounded-2xl border bg-background p-6">
+            <Reveal as="aside" direction="right" delayMs={120} className="flex flex-col gap-6">
+              <div className="rounded-2xl border bg-card shadow-card p-6">
                 <h2 className="mb-5 text-lg font-semibold text-foreground">Company information</h2>
                 <dl className="flex flex-col gap-5">
                   {details.map(({ icon: Icon, label, value, href }) => (
                     <div key={label} className="flex gap-3">
-                      <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Icon className="size-4" />
+                      </span>
                       <div className="min-w-0">
                         <dt className="text-xs text-muted-foreground">{label}</dt>
                         <dd className="mt-0.5 text-sm text-foreground">
                           {isPending ? (
                             <Skeleton className="h-4 w-40" />
                           ) : href && value ? (
-                            <a href={href} className="hover:underline">
+                            <a href={href} className="transition-colors hover:text-primary">
                               {value}
                             </a>
                           ) : (
@@ -106,7 +109,7 @@ export function ContactPageContent() {
                 title={settings?.site_name}
                 className="h-72 lg:h-80"
               />
-            </aside>
+            </Reveal>
           </div>
         </div>
       </main>

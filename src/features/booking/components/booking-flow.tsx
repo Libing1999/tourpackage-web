@@ -166,7 +166,7 @@ export function BookingFlow({ hotel, initialRoomId }: BookingFlowProps) {
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
-            <div className="rounded-2xl border bg-background p-5 sm:p-6">
+            <div className="rounded-2xl border bg-card shadow-card p-5 sm:p-6">
               {step === 0 ? (
                 <div className="flex flex-col gap-5">
                   <h2 className="font-semibold text-foreground">Select your room and dates</h2>

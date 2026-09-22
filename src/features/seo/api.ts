@@ -1,4 +1,5 @@
 import { env } from "@/utils/env";
+import { mockableFetch } from "@/services/server-fetch";
 import type { ApiResponse } from "@/types/api";
 import type { PublicSettings } from "@/features/home/types";
 
@@ -22,7 +23,7 @@ export interface SitemapData {
 /** Slugs and last-modified dates for `sitemap.xml`. */
 export async function fetchSitemapData(): Promise<SitemapData> {
   try {
-    const res = await fetch(`${env.apiUrl}/public/seo/sitemap`, {
+    const res = await mockableFetch(`${env.apiUrl}/public/seo/sitemap`, {
       // An hour: search engines re-crawl a sitemap far less often than this,
       // and a new hotel appearing in it 60 minutes late costs nothing.
       next: { revalidate: 3600 },
@@ -40,7 +41,7 @@ export async function fetchSitemapData(): Promise<SitemapData> {
 /** Site identity — name, contacts, social profiles — for Organization JSON-LD. */
 export async function fetchSeoSettings(): Promise<PublicSettings> {
   try {
-    const res = await fetch(`${env.apiUrl}/public/settings`, {
+    const res = await mockableFetch(`${env.apiUrl}/public/settings`, {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return {};
@@ -54,7 +55,7 @@ export async function fetchSeoSettings(): Promise<PublicSettings> {
 /** Published FAQs, for FAQPage structured data on the homepage. */
 export async function fetchSeoFaqs(): Promise<{ question: string; answer: string }[]> {
   try {
-    const res = await fetch(`${env.apiUrl}/public/faqs`, { next: { revalidate: 3600 } });
+    const res = await mockableFetch(`${env.apiUrl}/public/faqs`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     const body: ApiResponse<{ question: string; answer: string }[]> = await res.json();
     return body.data ?? [];

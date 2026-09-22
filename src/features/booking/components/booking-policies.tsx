@@ -23,7 +23,7 @@ const CANCELLATION_ROWS: [string, string][] = [
 export function BookingPolicies() {
   return (
     <section className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border bg-background p-6">
+      <div className="rounded-2xl border bg-card shadow-card p-6">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
           <Wallet className="size-5 text-primary" />
           Payment Policy
@@ -38,7 +38,7 @@ export function BookingPolicies() {
         </ul>
       </div>
 
-      <div className="rounded-2xl border bg-background p-6">
+      <div className="rounded-2xl border bg-card shadow-card p-6">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
           <Ban className="size-5 text-primary" />
           Cancellation Charges

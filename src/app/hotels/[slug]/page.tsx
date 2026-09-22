@@ -7,6 +7,7 @@ import { HotelDetailContent } from "@/features/hotels/components/hotel-detail-co
 import type { ApiResponse } from "@/types/api";
 import type { HotelDetail } from "@/features/hotels/types";
 import { env } from "@/utils/env";
+import { mockableFetch } from "@/services/server-fetch";
 
 interface HotelPageProps {
   params: Promise<{ slug: string }>;
@@ -14,7 +15,7 @@ interface HotelPageProps {
 
 async function fetchHotel(slug: string): Promise<HotelDetail | null> {
   try {
-    const res = await fetch(`${env.apiUrl}/public/hotels/${slug}`, {
+    const res = await mockableFetch(`${env.apiUrl}/public/hotels/${slug}`, {
       next: { revalidate: 300 },
     });
     if (!res.ok) {

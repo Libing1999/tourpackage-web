@@ -21,7 +21,7 @@ export function BookingDetails({ booking }: { booking: Booking }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-2xl border bg-background p-5 sm:p-6">
+      <div className="rounded-2xl border bg-card shadow-card p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs text-muted-foreground">Booking reference</p>
@@ -126,7 +126,7 @@ export function BookingDetails({ booking }: { booking: Booking }) {
         ) : null}
       </div>
 
-      <div className="rounded-2xl border bg-background p-5 sm:p-6">
+      <div className="rounded-2xl border bg-card shadow-card p-5 sm:p-6">
         <h2 className="mb-4 font-semibold text-foreground">Guest</h2>
         <p className="text-sm text-foreground">{booking.guestFullName}</p>
         <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">

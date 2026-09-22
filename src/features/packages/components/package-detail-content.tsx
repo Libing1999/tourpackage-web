@@ -4,6 +4,7 @@ import { Clock, Gauge, MapPin, Star, Users } from "lucide-react";
 
 import { SiteNavbar } from "@/components/layout/site-navbar";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { Reveal } from "@/components/common/reveal";
 import { MediaGallery } from "@/components/common/media-gallery";
 import Link from "next/link";
 
@@ -70,9 +71,9 @@ export function PackageDetailContent({ slug, initialPackage }: PackageDetailCont
       <SiteNavbar />
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-5 flex flex-col gap-2">
+          <div className="mb-6 flex animate-rise flex-col gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{pkg.title}</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">{pkg.title}</h1>
               {hasDiscount ? (
                 <Badge variant="destructive">
                   {formatDiscountPercent(pkg.price, pkg.discountPrice!)}% OFF
@@ -100,13 +101,15 @@ export function PackageDetailContent({ slug, initialPackage }: PackageDetailCont
             </div>
           </div>
 
+          <div className="animate-rise [animation-delay:150ms]">
           <MediaGallery images={pkg.images} title={pkg.title} />
+          </div>
 
           <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_320px]">
             <div className="flex flex-col gap-10">
               {pkg.summary || pkg.description ? (
-                <section>
-                  <h2 className="mb-3 text-lg font-semibold text-foreground">Overview</h2>
+                <Reveal as="section">
+                  <h2 className="mb-3 text-xl font-semibold tracking-tight text-foreground">Overview</h2>
                   {pkg.summary ? (
                     <p className="text-sm leading-relaxed text-foreground">{pkg.summary}</p>
                   ) : null}
@@ -115,34 +118,34 @@ export function PackageDetailContent({ slug, initialPackage }: PackageDetailCont
                       {pkg.description}
                     </p>
                   ) : null}
-                </section>
+                </Reveal>
               ) : null}
 
-              <section>
-                <h2 className="mb-5 text-lg font-semibold text-foreground">Itinerary</h2>
+              <Reveal as="section">
+                <h2 className="mb-5 text-xl font-semibold tracking-tight text-foreground">Itinerary</h2>
                 <PackageItinerary days={pkg.itinerary} />
-              </section>
+              </Reveal>
 
               {pkg.includes.length > 0 || pkg.excludes.length > 0 ? (
-                <section className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                <Reveal as="section" className="grid grid-cols-1 gap-8 sm:grid-cols-2">
                   {pkg.includes.length > 0 ? (
                     <div>
-                      <h2 className="mb-4 text-lg font-semibold text-foreground">What&apos;s Included</h2>
+                      <h2 className="mb-4 text-xl font-semibold tracking-tight text-foreground">What&apos;s Included</h2>
                       <PackageLineItems items={pkg.includes} variant="include" />
                     </div>
                   ) : null}
                   {pkg.excludes.length > 0 ? (
                     <div>
-                      <h2 className="mb-4 text-lg font-semibold text-foreground">What&apos;s Not Included</h2>
+                      <h2 className="mb-4 text-xl font-semibold tracking-tight text-foreground">What&apos;s Not Included</h2>
                       <PackageLineItems items={pkg.excludes} variant="exclude" />
                     </div>
                   ) : null}
-                </section>
+                </Reveal>
               ) : null}
             </div>
 
             <aside>
-              <div className="sticky top-24 rounded-2xl border bg-background p-5">
+              <div className="sticky top-24 animate-rise rounded-2xl border bg-card p-5 shadow-card [animation-delay:250ms]">
                 <p className="text-sm text-muted-foreground">
                   {hasDiscount ? "Now from" : "From"}
                 </p>

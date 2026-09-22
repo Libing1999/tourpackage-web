@@ -1,6 +1,8 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { env } from "@/utils/env";
 import { storage } from "@/utils/storage";
+import { USE_API } from "@/config/feature-flags";
+import { mockAdapter } from "@/services/mock-adapter";
 import type { ApiResponse } from "@/types/api";
 import type { AuthResponse } from "@/features/auth/types";
 
@@ -30,6 +32,10 @@ export const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  // Frontend-only mode (see config/feature-flags.ts): every request is
+  // answered from local mock data instead of reaching the network. Flip
+  // USE_API back on once a backend is reachable — nothing else here changes.
+  adapter: USE_API ? undefined : mockAdapter,
 });
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {

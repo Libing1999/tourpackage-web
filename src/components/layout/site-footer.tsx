@@ -32,8 +32,10 @@ export function SiteFooter() {
     : [];
 
   return (
-    <footer className="border-t bg-muted/30">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="relative border-t bg-muted/40">
+      {/* A thin brand rule along the top edge. */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" aria-hidden="true" />
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex flex-col gap-3">
             <Logo />
@@ -50,7 +52,7 @@ export function SiteFooter() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-8 items-center justify-center rounded-full border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="flex size-9 items-center justify-center rounded-full border bg-background text-muted-foreground transition-all duration-200 ease-out-soft hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-primary-foreground"
                   >
                     <Icon className="size-4" />
                   </a>
@@ -60,11 +62,11 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Quick Links</h3>
+            <h3 className="text-xs font-semibold tracking-[0.14em] text-foreground uppercase">Quick Links</h3>
             <ul className="mt-4 flex flex-col gap-2.5">
               {quickLinks.map((link) => (
                 <li key={link.id}>
-                  <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground">
+                  <a href={link.href} className="inline-block text-sm text-muted-foreground transition-[color,translate] duration-200 ease-out-soft hover:translate-x-0.5 hover:text-primary">
                     {link.label}
                   </a>
                 </li>
@@ -73,7 +75,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Contact Us</h3>
+            <h3 className="text-xs font-semibold tracking-[0.14em] text-foreground uppercase">Contact Us</h3>
             <ul className="mt-4 flex flex-col gap-3">
               {isPending ? (
                 <>
@@ -86,7 +88,7 @@ export function SiteFooter() {
                   {settings?.contact_email ? (
                     <li className="flex items-start gap-2 text-sm text-muted-foreground">
                       <Mail className="mt-0.5 size-4 shrink-0" />
-                      <a href={`mailto:${settings.contact_email}`} className="hover:text-foreground">
+                      <a href={`mailto:${settings.contact_email}`} className="transition-colors hover:text-primary">
                         {settings.contact_email}
                       </a>
                     </li>
@@ -94,7 +96,7 @@ export function SiteFooter() {
                   {settings?.contact_phone ? (
                     <li className="flex items-start gap-2 text-sm text-muted-foreground">
                       <Phone className="mt-0.5 size-4 shrink-0" />
-                      <a href={`tel:${settings.contact_phone}`} className="hover:text-foreground">
+                      <a href={`tel:${settings.contact_phone}`} className="transition-colors hover:text-primary">
                         {settings.contact_phone}
                       </a>
                     </li>
@@ -106,7 +108,7 @@ export function SiteFooter() {
                         href={`https://wa.me/${settings.contact_whatsapp.replace(/\D/g, "")}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-foreground"
+                        className="transition-colors hover:text-primary"
                       >
                         {settings.contact_whatsapp} (WhatsApp)
                       </a>

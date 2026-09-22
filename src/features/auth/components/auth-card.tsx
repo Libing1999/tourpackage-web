@@ -11,7 +11,7 @@ interface AuthCardProps {
 
 export function AuthCard({ title, description, children, footer }: AuthCardProps) {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm animate-rise shadow-card-hover ring-foreground/[0.06]">
       <CardHeader>
         <CardTitle className="text-xl">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

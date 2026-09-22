@@ -5,6 +5,7 @@ import { MapPin, Phone, Star } from "lucide-react";
 
 import { SiteNavbar } from "@/components/layout/site-navbar";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { Reveal } from "@/components/common/reveal";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -54,9 +55,9 @@ export function HotelDetailContent({ slug, initialHotel }: { slug: string; initi
       <SiteNavbar />
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-5 flex flex-col gap-2">
+          <div className="mb-6 flex animate-rise flex-col gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{hotel.name}</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">{hotel.name}</h1>
               {hotel.starRating ? (
                 <Badge className="gap-1">
                   {hotel.starRating} <Star className="size-3 fill-current" />
@@ -82,22 +83,24 @@ export function HotelDetailContent({ slug, initialHotel }: { slug: string; initi
             </div>
           </div>
 
+          <div className="animate-rise [animation-delay:150ms]">
           <MediaGallery images={hotel.images} title={hotel.name} />
+          </div>
 
           <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_320px]">
             <div className="flex flex-col gap-10">
               {hotel.description ? (
-                <section>
-                  <h2 className="mb-3 text-lg font-semibold text-foreground">About this hotel</h2>
+                <Reveal as="section">
+                  <h2 className="mb-3 text-xl font-semibold tracking-tight text-foreground">About this hotel</h2>
                   <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                     {hotel.description}
                   </p>
-                </section>
+                </Reveal>
               ) : null}
 
               {hotel.amenities.length > 0 ? (
-                <section>
-                  <h2 className="mb-4 text-lg font-semibold text-foreground">Amenities</h2>
+                <Reveal as="section">
+                  <h2 className="mb-4 text-xl font-semibold tracking-tight text-foreground">Amenities</h2>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                     {hotel.amenities.map((amenity) => {
                       const Icon = getAmenityIcon(amenity.icon);
@@ -109,17 +112,17 @@ export function HotelDetailContent({ slug, initialHotel }: { slug: string; initi
                       );
                     })}
                   </div>
-                </section>
+                </Reveal>
               ) : null}
 
-              <section>
-                <h2 className="mb-4 text-lg font-semibold text-foreground">Available Rooms</h2>
+              <Reveal as="section">
+                <h2 className="mb-4 text-xl font-semibold tracking-tight text-foreground">Available Rooms</h2>
                 <HotelRoomsList rooms={hotel.rooms} hotelSlug={hotel.slug} />
-              </section>
+              </Reveal>
             </div>
 
             <aside>
-              <div className="sticky top-24 rounded-2xl border bg-background p-5">
+              <div className="sticky top-24 animate-rise rounded-2xl border bg-card p-5 shadow-card [animation-delay:250ms]">
                 <p className="text-sm text-muted-foreground">Starting from</p>
                 <p className="text-2xl font-bold text-foreground">
                   {hotel.basePrice > 0 ? (
