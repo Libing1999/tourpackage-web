@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { MapPin, Phone, Star } from "lucide-react";
 
 import { SiteNavbar } from "@/components/layout/site-navbar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/utils/format";
@@ -144,6 +146,19 @@ export function HotelDetailContent({ slug, initialHotel }: { slug: string; initi
                     </div>
                   ) : null}
                 </dl>
+
+                <Link
+                  href={`/hotels/${hotel.slug}/book`}
+                  className={buttonVariants({ className: "mt-5 w-full" })}
+                >
+                  Book This Hotel
+                </Link>
+                <Link
+                  href={`/contact?hotelId=${hotel.id}&hotelName=${encodeURIComponent(hotel.name)}`}
+                  className={buttonVariants({ variant: "ghost", className: "mt-2 w-full" })}
+                >
+                  Ask About This Hotel
+                </Link>
               </div>
             </aside>
           </div>
