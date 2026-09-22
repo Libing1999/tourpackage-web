@@ -1,12 +1,14 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
+# Corepack provides the pnpm version pinned in package.json#packageManager.
+RUN corepack enable
 
 # ---- Dependencies ----
 FROM base AS deps
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json pnpm-lock.yaml .npmrc ./
+RUN pnpm install --frozen-lockfile
 
 # ---- Build ----
 FROM base AS builder
@@ -18,7 +20,7 @@ ARG NEXT_PUBLIC_APP_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN yarn build
+RUN pnpm build
 
 # ---- Runtime ----
 FROM base AS runner

@@ -7,6 +7,7 @@ import { Spinner } from "@/components/common/spinner";
 import type { ApiResponse } from "@/types/api";
 import type { TourPackageDetail } from "@/features/packages/types";
 import { env } from "@/utils/env";
+import { mockableFetch } from "@/services/server-fetch";
 
 interface BookPackagePageProps {
   params: Promise<{ slug: string }>;
@@ -22,7 +23,7 @@ async function fetchPackage(slug: string): Promise<TourPackageDetail | null> {
     // No caching: price and group-size limits drive what the guest is quoted
     // and allowed to book, and a stale copy would let them start against
     // numbers the server will reject.
-    const res = await fetch(`${env.apiUrl}/public/tour-packages/${slug}`, { cache: "no-store" });
+    const res = await mockableFetch(`${env.apiUrl}/public/tour-packages/${slug}`, { cache: "no-store" });
     if (!res.ok) {
       return null;
     }

@@ -7,6 +7,7 @@ import { Spinner } from "@/components/common/spinner";
 import type { ApiResponse } from "@/types/api";
 import type { HotelDetail } from "@/features/hotels/types";
 import { env } from "@/utils/env";
+import { mockableFetch } from "@/services/server-fetch";
 
 interface BookPageProps {
   params: Promise<{ slug: string }>;
@@ -25,7 +26,7 @@ async function fetchHotel(slug: string): Promise<HotelDetail | null> {
     // No caching here: the room list drives availability and price, and a
     // stale one would let a guest start a booking against a room that's since
     // been deactivated or repriced.
-    const res = await fetch(`${env.apiUrl}/public/hotels/${slug}`, { cache: "no-store" });
+    const res = await mockableFetch(`${env.apiUrl}/public/hotels/${slug}`, { cache: "no-store" });
     if (!res.ok) {
       return null;
     }

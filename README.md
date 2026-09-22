@@ -144,7 +144,7 @@ using it standalone compiled fine and passed lint, but crashed at render (caught
 boundary) the moment the user menu was opened, silently hiding the entire dropdown including
 "Log out." Found by actually clicking the menu open in a real browser, not by reading the code.
 Fixed by replacing it with a plain `<div>` for that profile-info block, since it isn't semantically
-a group label. Moral: `yarn build` passing is necessary, not sufficient — this project verifies
+a group label. Moral: `pnpm build` passing is necessary, not sufficient — this project verifies
 UI changes with Playwright against the running app, not just the build.
 
 ## Hotel Module
@@ -184,7 +184,7 @@ backend-only, consistent with the rest of this project's admin surface.
 ### A bug the build didn't catch
 
 The first version made the "hotel not found" check client-side only — a `useEffect` that called
-`notFound()` after a `useQuery` resolved to a 404. `yarn build` and `yarn lint` both passed, and it
+`notFound()` after a `useQuery` resolved to a 404. `pnpm build` and `pnpm lint` both passed, and it
 even looked correct in the browser (the not-found page rendered). What it actually produced was a
 **200 status code** on a bad slug: the HTML document had already been served by the time the client
 noticed the hotel didn't exist, so there was no way to change the response's status after the fact.
@@ -560,7 +560,7 @@ than 500ing, because a 500 on `/sitemap.xml` tells a crawler the whole file is b
 
 ### Tests
 
-`yarn test` runs Vitest over the pure logic that carries real risk: URL construction, description
+`pnpm test` runs Vitest over the pure logic that carries real risk: URL construction, description
 truncation, card-type selection, and every structured-data builder. The environment is `node`, not
 jsdom — none of this touches the DOM, and jsdom's `whatwg-url` dependency requires Node 22 while this
 project targets 20. Component behaviour is covered by the Playwright passes, which drive a real
@@ -572,7 +572,7 @@ testable without parsing JSX.
 
 ### Typecheck in CI
 
-`yarn tsc --noEmit` runs as its own CI step rather than relying on `next build`. It immediately
+`pnpm exec tsc --noEmit` runs as its own CI step rather than relying on `next build`. It immediately
 earned that: it caught type errors in a test file that ESLint passed cleanly.
 
 ### Security headers
@@ -591,17 +591,17 @@ developer got.
 
 ### Prerequisites
 
-- Node.js 20+
-- Yarn (this project's lockfile is `yarn.lock`)
+- Node.js 24 LTS
+- pnpm 10 (pinned in `package.json#packageManager`; run `corepack enable` to get it)
 
-> Note: `npm install` may be flaky depending on your network/registry setup. This project was set up and verified with `yarn`.
+> pnpm is the only supported package manager. `pnpm-lock.yaml` is the single lockfile — do not run npm, yarn or bun here.
 
 ### Install & Run
 
 ```bash
 cp .env.example .env.local
-yarn install
-yarn dev
+pnpm install
+pnpm dev
 ```
 
 The app runs at http://localhost:3000.
@@ -610,15 +610,16 @@ The app runs at http://localhost:3000.
 
 | Command      | Description                       |
 | ------------ | ---------------------------------- |
-| `yarn dev`   | Start the dev server (Turbopack)   |
-| `yarn build` | Production build                   |
-| `yarn start` | Run the production build           |
-| `yarn lint`  | Run ESLint                         |
+| `pnpm dev`   | Start the dev server (Turbopack)   |
+| `pnpm build` | Production build                   |
+| `pnpm start` | Run the production build           |
+| `pnpm lint`  | Run ESLint                         |
+| `pnpm test`  | Run unit tests (Vitest)            |
 
 ### Adding shadcn/ui components
 
 ```bash
-npx shadcn@latest add <component>
+pnpm dlx shadcn@latest add <component>
 ```
 
 ## Environment Variables

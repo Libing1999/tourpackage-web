@@ -1,4 +1,5 @@
 import { apiClient } from "@/services/api-client";
+import { mockableFetch } from "@/services/server-fetch";
 import type { ApiResponse, PaginatedResponse } from "@/types/api";
 import { env } from "@/utils/env";
 import type {
@@ -24,7 +25,7 @@ const SITE_CONTENT_REVALIDATE = 60;
 
 export async function fetchSiteContent(): Promise<SiteContent | null> {
   try {
-    const res = await fetch(`${env.apiUrl}/public/cms/site-content`, {
+    const res = await mockableFetch(`${env.apiUrl}/public/cms/site-content`, {
       next: { revalidate: SITE_CONTENT_REVALIDATE },
     });
     if (!res.ok) return null;
@@ -37,7 +38,7 @@ export async function fetchSiteContent(): Promise<SiteContent | null> {
 
 export async function fetchPageSeo(path: string): Promise<PageSeo | null> {
   try {
-    const res = await fetch(
+    const res = await mockableFetch(
       `${env.apiUrl}/public/cms/seo?path=${encodeURIComponent(path)}`,
       { next: { revalidate: SITE_CONTENT_REVALIDATE } }
     );
@@ -51,7 +52,7 @@ export async function fetchPageSeo(path: string): Promise<PageSeo | null> {
 
 export async function fetchGallery(): Promise<GalleryImage[]> {
   try {
-    const res = await fetch(`${env.apiUrl}/public/cms/gallery`, {
+    const res = await mockableFetch(`${env.apiUrl}/public/cms/gallery`, {
       next: { revalidate: SITE_CONTENT_REVALIDATE },
     });
     if (!res.ok) return [];
@@ -64,7 +65,7 @@ export async function fetchGallery(): Promise<GalleryImage[]> {
 
 export async function fetchBlogPost(slug: string): Promise<BlogPostDetail | null> {
   try {
-    const res = await fetch(`${env.apiUrl}/public/cms/blog/${slug}`, {
+    const res = await mockableFetch(`${env.apiUrl}/public/cms/blog/${slug}`, {
       next: { revalidate: SITE_CONTENT_REVALIDATE },
     });
     if (!res.ok) return null;

@@ -108,21 +108,21 @@ export function HotelsListingContent() {
       <SiteNavbar />
       <main className="flex-1 bg-muted/20">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-6 flex flex-col gap-1.5">
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{heading?.title}</h1>
+          <div className="mb-6 flex animate-rise flex-col gap-1.5">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{heading?.title}</h1>
             <p className="text-sm text-muted-foreground">
               {isPending ? "Searching hotels…" : `${data?.totalElements ?? 0} hotels found`}
             </p>
           </div>
 
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mb-6 flex animate-rise flex-col gap-3 [animation-delay:120ms] sm:flex-row sm:items-center">
             <div className="relative flex-1">
-              <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Search by hotel, city, or country…"
-                className="h-10 pl-8"
+                className="h-11 rounded-xl bg-card pl-9 shadow-card"
                 aria-label="Search hotels"
               />
             </div>
@@ -153,7 +153,7 @@ export function HotelsListingContent() {
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
             <aside className="hidden lg:block">
-              <div className="sticky top-24 rounded-2xl border bg-background p-5">{filterPanel}</div>
+              <div className="sticky top-24 animate-rise rounded-2xl border bg-card p-5 shadow-card [animation-delay:200ms]">{filterPanel}</div>
             </aside>
 
             <div className="flex flex-col gap-8">
@@ -171,8 +171,8 @@ export function HotelsListingContent() {
                 <>
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                     {data.content.map((hotel, i) => (
-                      <Reveal key={hotel.id} delayMs={Math.min(i, 6) * 60}>
-                        <Link href={`/hotels/${hotel.slug}`} className="block">
+                      <Reveal className="h-full" key={hotel.id} delayMs={Math.min(i, 6) * 60}>
+                        <Link href={`/hotels/${hotel.slug}`} className="block h-full rounded-xl focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none">
                           <HotelCard hotel={hotel} />
                         </Link>
                       </Reveal>
@@ -186,7 +186,7 @@ export function HotelsListingContent() {
                   />
                 </>
               ) : (
-                <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed p-16 text-center">
+                <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed bg-card/60 p-16 text-center">
                   <p className="font-medium text-foreground">No hotels match your filters</p>
                   <p className="text-sm text-muted-foreground">Try adjusting your search or filters.</p>
                 </div>

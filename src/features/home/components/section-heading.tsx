@@ -22,14 +22,17 @@ export function SectionHeading({ blockKey }: { blockKey: string }) {
   return (
     <Reveal className="mx-auto max-w-2xl text-center">
       {block.eyebrow ? (
-        <p className="text-sm font-semibold tracking-wider text-primary uppercase">{block.eyebrow}</p>
+        <p className="inline-flex items-center gap-2 rounded-full bg-primary/[0.07] px-3 py-1 text-xs font-semibold tracking-[0.14em] text-primary uppercase ring-1 ring-primary/10">
+          <span className="size-1.5 rounded-full bg-amber-500" aria-hidden="true" />
+          {block.eyebrow}
+        </p>
       ) : null}
       {block.title ? (
-        <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {block.title}
         </h2>
       ) : null}
-      {block.subtitle ? <p className="mt-3 text-muted-foreground">{block.subtitle}</p> : null}
+      {block.subtitle ? <p className="mt-4 text-base leading-relaxed text-muted-foreground">{block.subtitle}</p> : null}
     </Reveal>
   );
 }

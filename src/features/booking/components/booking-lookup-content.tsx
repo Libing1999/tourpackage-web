@@ -58,7 +58,7 @@ export function BookingLookupContent() {
           <form
             onSubmit={onSubmit}
             noValidate
-            className="mt-6 flex flex-col gap-4 rounded-2xl border bg-background p-5 sm:p-6"
+            className="mt-6 flex flex-col gap-4 rounded-2xl border bg-card shadow-card p-5 sm:p-6"
           >
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="bookingNumber">Booking reference</Label>

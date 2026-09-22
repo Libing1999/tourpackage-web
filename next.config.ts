@@ -46,6 +46,11 @@ const nextConfig: NextConfig = {
     // Optimised variants cache for a month; a changed image means a changed URL,
     // because uploads are stored under a generated name.
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    // Next 16 only accepts qualities listed here; the hero slider asks for 90.
+    qualities: [75, 90],
+    // Next 16 refuses to optimise images from local addresses. The dev API
+    // serves uploads from localhost:8080, so allow it outside production only.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
   },
 
   async headers() {

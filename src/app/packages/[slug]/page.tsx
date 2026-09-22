@@ -7,6 +7,7 @@ import { PackageDetailContent } from "@/features/packages/components/package-det
 import type { ApiResponse } from "@/types/api";
 import type { TourPackageDetail } from "@/features/packages/types";
 import { env } from "@/utils/env";
+import { mockableFetch } from "@/services/server-fetch";
 
 interface PackagePageProps {
   params: Promise<{ slug: string }>;
@@ -14,7 +15,7 @@ interface PackagePageProps {
 
 async function fetchPackage(slug: string): Promise<TourPackageDetail | null> {
   try {
-    const res = await fetch(`${env.apiUrl}/public/tour-packages/${slug}`, {
+    const res = await mockableFetch(`${env.apiUrl}/public/tour-packages/${slug}`, {
       next: { revalidate: 300 },
     });
     if (!res.ok) {

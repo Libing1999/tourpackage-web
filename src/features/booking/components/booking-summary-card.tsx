@@ -26,7 +26,7 @@ export function BookingSummaryCard({
   const total = room.pricePerNight * nights;
 
   return (
-    <div className="rounded-2xl border bg-background p-5">
+    <div className="rounded-2xl border bg-card shadow-card p-5">
       <h2 className="font-semibold text-foreground">{hotel.name}</h2>
       <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
         <MapPin className="size-3.5" />

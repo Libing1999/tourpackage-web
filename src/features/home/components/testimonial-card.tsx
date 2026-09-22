@@ -16,13 +16,15 @@ function initials(name: string) {
 
 export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <Card className="flex h-full flex-col justify-between p-6">
-      <Quote className="size-6 text-primary/40" />
+    <Card className="flex h-full flex-col justify-between gap-0 p-6 shadow-card ring-foreground/[0.06] transition-[translate,box-shadow] duration-300 ease-out-soft hover:-translate-y-1 hover:shadow-card-hover">
+      <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <Quote className="size-5" />
+      </span>
       <CardContent className="flex-1 p-0">
-        <p className="mt-3 text-sm text-muted-foreground">&ldquo;{testimonial.message}&rdquo;</p>
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">&ldquo;{testimonial.message}&rdquo;</p>
       </CardContent>
-      <div className="mt-5 flex items-center gap-3">
-        <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-muted">
+      <div className="mt-6 flex items-center gap-3 border-t pt-5">
+        <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-primary/10 text-primary ring-2 ring-background">
           {testimonial.customerAvatarUrl ? (
             <Image
               src={testimonial.customerAvatarUrl}

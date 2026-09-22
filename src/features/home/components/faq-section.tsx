@@ -39,10 +39,10 @@ export function FaqSection() {
         <Reveal className="mt-10 flex flex-col gap-8">
           {categories.map((category) => (
             <div key={category}>
-              <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <h3 className="mb-3 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                 {toTitleCase(category)}
               </h3>
-              <Accordion className="w-full">
+              <Accordion className="w-full rounded-2xl border bg-card px-5 shadow-card">
                 {faqs!
                   .filter((faq) => faq.category === category)
                   .map((faq) => (
