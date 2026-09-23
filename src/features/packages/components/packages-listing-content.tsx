@@ -192,7 +192,7 @@ export function PackagesListingContent() {
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                     {data.content.map((pkg, i) => (
                       <Reveal className="h-full" key={pkg.id} delayMs={Math.min(i, 6) * 60}>
-                        <Link href={`/packages/${pkg.slug}`} className="block h-full rounded-xl focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none">
+                        <Link href={`/packages/${pkg.slug}`} className="block h-full rounded-2xl focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none">
                           <PackageCard pkg={pkg} />
                         </Link>
                       </Reveal>

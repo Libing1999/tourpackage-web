@@ -29,44 +29,83 @@ import type { PopularSearch, SearchHit } from "@/features/search/types";
 const img = (id: string, w = 1200) =>
   `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format&fit=crop`;
 
+// Square and cropped to the face, for the small round avatars; a plain crop
+// leaves a full-length portrait's face a speck in the circle.
+const face = (id: string) =>
+  `https://images.unsplash.com/${id}?w=200&h=200&q=80&auto=format&fit=facearea&facepad=2.5`;
+
+// Free photos under the Unsplash License, each chosen to show what its label
+// names: the place itself where Unsplash has it, otherwise the kind of stay or
+// activity. The trailing comment is the photo's page, unsplash.com/photos/<id>.
 const PHOTOS = {
-  mountainRoad: img("photo-1506905925346-21bda4d32df4"),
-  lakeBlue: img("photo-1520250497591-112f2f40a3f4"),
-  monastery: img("photo-1571003123894-1f0594d2b5d9"),
-  camp: img("photo-1489516408517-0c0a15662682"),
-  valley: img("photo-1476514525535-07fb3b4ae5f1"),
-  desertDunes: img("photo-1499856871958-5b9627545d1a"),
-  hotelRoom: img("photo-1512100356356-de1b84283e18"),
-  travelGeneric: img("photo-1566073771259-6a8506099945"),
-  avatar1: img("photo-1544551763-46a013bb70d5", 200),
-  avatar2: img("photo-1522199755839-a2bacb67c546", 200),
-  avatar3: img("photo-1533105079780-92b9be482077", 200),
-  bike: img("photo-1523906834658-6e24ef2386f9"),
-  starrySky: img("photo-1600585154340-be6161a56a0c"),
-  trekker: img("photo-1551632811-561732d1e306"),
-  riverValley: img("photo-1522771930-78848d9293e8"),
+  // the home page hero keeps its original frame
+  peaksAboveClouds: img("photo-1506905925346-21bda4d32df4"),
+  // places
+  lehPalaceAtDusk: img("photo-1706287040513-1019cd6173d1"), // 9G6pz9T2fF0
+  nubraCamels: img("photo-1660303941192-575c686e9b05"), // wQ9-IpNOEnM
+  hunderCamelRide: img("photo-1744118805778-34037a6386ed"), // SE1a8yZYrWU
+  pangong: img("photo-1636800877579-b69375ae9532"), // MEaPZmSKyws
+  pangongReflection: img("photo-1643138769032-34c831015c62"), // kSuScDOqJAo
+  pangongShore: img("photo-1606857090627-27ca46667290"), // J_3681O7enY
+  tsoMoriri: img("photo-1607890276967-31862551e0a3"), // jObamLEXGT8
+  dalLakeShikaras: img("photo-1715457573748-8e8a70b2c1be"), // XHG0uFAlEGM
+  kargilTown: img("photo-1568786701210-416f4df970f1"), // tnAogC-HnN4
+  autumnValley: img("photo-1719385742336-1fd16f4d4314"), // T1molMrIZRs
+  glacierValley: img("photo-1653101538620-f4fb698354b3"), // kpozQGZsJBk
+  himalayanLake: img("photo-1768728410345-6327bf1cb6fc"), // vMY664KmN_8
+  // monasteries
+  thikseyWithChortens: img("photo-1747643607854-9f0d93c8c790"), // oe-R4ltNcj8
+  thikseyHillside: img("photo-1651840622024-49a478967876"), // vYOjbzHys4A
+  clifftopMonastery: img("photo-1744197068961-18194526c236"), // l_Gsf_31TIE
+  hemisMonks: img("photo-1770463238793-7fb90e3e2676"), // 8jfu1mGQnWY
+  // roads and treks
+  bikeRider: img("photo-1762707232257-ab6057b4128b"), // zb8AE0rtghg
+  highwayRider: img("photo-1670644654521-6fbfffeaba87"), // d9ZB6r_Q3n4
+  khardungLaSign: img("photo-1636790132872-6319f4b378ad"), // 3bCJE_NAfHo
+  openRoad: img("photo-1728723321081-872393671302"), // uCF-k4dQcKc
+  chadarTrekkers: img("photo-1702704944450-0f3a575491a2"), // CSVOBqJyGCM
+  frozenWaterfall: img("photo-1702296365554-b01164502e94"), // UE26vHLRnGM
+  markhaTrekkers: img("photo-1778563333837-3b6b12554caf"), // VMqktTWBmW8
+  trekkerOnRidge: img("photo-1604236480398-2c166ec6dbae"), // Rd9JKm0GxOo
+  // night skies and camps
+  nubraCampAtNight: img("photo-1534747498894-8511ef72d72c"), // 0w0yDBtxv6E
+  tentUnderStars: img("photo-1758705023495-b64dfe01f970"), // R4NEEsb_Xh0
+  starsOverRidge: img("photo-1721755514211-eca71feba369"), // DkJVvlTRx2c
+  milkyWayOverMonastery: img("photo-1706191465084-0e2f89a148fa"), // FTUSP0ZH49I
+  // stays
+  roomWithSnowView: img("photo-1779547011126-c646b7de93b5"), // s7B6jin6pIM
+  roomWithLakeView: img("photo-1761470371217-a4de0ff0e8df"), // n2vj0puCWTo
+  roomWithBalcony: img("photo-1677160353599-5899a79ae439"), // 8tTatYH29DU
+  swissTentCamp: img("photo-1563630136521-9f8b3336f09f"), // 8oB7HUfvK1o
+  valleyLodgeTent: img("photo-1632367294096-4e77d53c4ae9"), // HpNcXyMfYzw
+  bellTent: img("photo-1607908560428-36ff9e0363b7"), // lIWzmdpQXgc
+  palaceFacade: img("photo-1741415990912-80db05801bce"), // Pi0zB7m5-wE
+  // reviewers
+  avatarAnanya: face("photo-1618245472177-2a74ad3b994a"), // RgDVFbXllVA
+  avatarJames: face("photo-1592234789031-94bf65f630ed"), // H982yXJ7vOk
+  avatarPriya: face("photo-1759840278381-bf7d5e332050"), // c07j-zSHezM
 };
 
 // --- destinations -----------------------------------------------------
 
 export const mockDestinations: Destination[] = [
-  { id: "dest-leh", name: "Leh", slug: "leh", countryName: "India", imageUrl: PHOTOS.monastery, packageCount: 6 },
-  { id: "dest-nubra", name: "Nubra Valley", slug: "nubra-valley", countryName: "India", imageUrl: PHOTOS.desertDunes, packageCount: 4 },
-  { id: "dest-pangong", name: "Pangong Lake", slug: "pangong-lake", countryName: "India", imageUrl: PHOTOS.lakeBlue, packageCount: 3 },
-  { id: "dest-tsomoriri", name: "Tso Moriri", slug: "tso-moriri", countryName: "India", imageUrl: PHOTOS.riverValley, packageCount: 2 },
-  { id: "dest-srinagar", name: "Srinagar", slug: "srinagar", countryName: "India", imageUrl: PHOTOS.valley, packageCount: 3 },
-  { id: "dest-kargil", name: "Kargil", slug: "kargil", countryName: "India", imageUrl: PHOTOS.mountainRoad, packageCount: 2 },
+  { id: "dest-leh", name: "Leh", slug: "leh", countryName: "India", imageUrl: PHOTOS.lehPalaceAtDusk, packageCount: 6 },
+  { id: "dest-nubra", name: "Nubra Valley", slug: "nubra-valley", countryName: "India", imageUrl: PHOTOS.nubraCamels, packageCount: 4 },
+  { id: "dest-pangong", name: "Pangong Lake", slug: "pangong-lake", countryName: "India", imageUrl: PHOTOS.pangong, packageCount: 3 },
+  { id: "dest-tsomoriri", name: "Tso Moriri", slug: "tso-moriri", countryName: "India", imageUrl: PHOTOS.tsoMoriri, packageCount: 2 },
+  { id: "dest-srinagar", name: "Srinagar", slug: "srinagar", countryName: "India", imageUrl: PHOTOS.dalLakeShikaras, packageCount: 3 },
+  { id: "dest-kargil", name: "Kargil", slug: "kargil", countryName: "India", imageUrl: PHOTOS.kargilTown, packageCount: 2 },
 ];
 
 // --- hotels -------------------------------------------------------------
 
 const hotelBase: Array<Omit<HotelSummary, "coverImageUrl"> & { image: string }> = [
-  { id: "hotel-grand-dragon", name: "The Grand Dragon Ladakh", slug: "grand-dragon-ladakh", cityName: "Leh", countryName: "India", starRating: 5, ratingAverage: 4.7, ratingCount: 312, basePrice: 8500, currencyCode: "INR", image: PHOTOS.hotelRoom },
-  { id: "hotel-nubra-eco", name: "Nubra Ecolodge", slug: "nubra-ecolodge", cityName: "Nubra Valley", countryName: "India", starRating: 4, ratingAverage: 4.5, ratingCount: 148, basePrice: 5200, currencyCode: "INR", image: PHOTOS.camp },
-  { id: "hotel-pangong-camp", name: "Pangong Retreat Camp", slug: "pangong-retreat-camp", cityName: "Pangong Lake", countryName: "India", starRating: 3, ratingAverage: 4.6, ratingCount: 201, basePrice: 4800, currencyCode: "INR", image: PHOTOS.starrySky },
-  { id: "hotel-lchang-nang", name: "Lchang Nang Retreat", slug: "lchang-nang-retreat", cityName: "Leh", countryName: "India", starRating: 4, ratingAverage: 4.4, ratingCount: 96, basePrice: 6100, currencyCode: "INR", image: PHOTOS.valley },
-  { id: "hotel-ladakh-sarai", name: "Ladakh Sarai Resort", slug: "ladakh-sarai-resort", cityName: "Leh", countryName: "India", starRating: 4, ratingAverage: 4.3, ratingCount: 87, basePrice: 5600, currencyCode: "INR", image: PHOTOS.mountainRoad },
-  { id: "hotel-stok-palace", name: "Stok Palace Heritage", slug: "stok-palace-heritage", cityName: "Leh", countryName: "India", starRating: 5, ratingAverage: 4.8, ratingCount: 64, basePrice: 9200, currencyCode: "INR", image: PHOTOS.monastery },
+  { id: "hotel-grand-dragon", name: "The Grand Dragon Ladakh", slug: "grand-dragon-ladakh", cityName: "Leh", countryName: "India", starRating: 5, ratingAverage: 4.7, ratingCount: 312, basePrice: 8500, currencyCode: "INR", image: PHOTOS.roomWithSnowView },
+  { id: "hotel-nubra-eco", name: "Nubra Ecolodge", slug: "nubra-ecolodge", cityName: "Nubra Valley", countryName: "India", starRating: 4, ratingAverage: 4.5, ratingCount: 148, basePrice: 5200, currencyCode: "INR", image: PHOTOS.valleyLodgeTent },
+  { id: "hotel-pangong-camp", name: "Pangong Retreat Camp", slug: "pangong-retreat-camp", cityName: "Pangong Lake", countryName: "India", starRating: 3, ratingAverage: 4.6, ratingCount: 201, basePrice: 4800, currencyCode: "INR", image: PHOTOS.swissTentCamp },
+  { id: "hotel-lchang-nang", name: "Lchang Nang Retreat", slug: "lchang-nang-retreat", cityName: "Leh", countryName: "India", starRating: 4, ratingAverage: 4.4, ratingCount: 96, basePrice: 6100, currencyCode: "INR", image: PHOTOS.roomWithLakeView },
+  { id: "hotel-ladakh-sarai", name: "Ladakh Sarai Resort", slug: "ladakh-sarai-resort", cityName: "Leh", countryName: "India", starRating: 4, ratingAverage: 4.3, ratingCount: 87, basePrice: 5600, currencyCode: "INR", image: PHOTOS.bellTent },
+  { id: "hotel-stok-palace", name: "Stok Palace Heritage", slug: "stok-palace-heritage", cityName: "Leh", countryName: "India", starRating: 5, ratingAverage: 4.8, ratingCount: 64, basePrice: 9200, currencyCode: "INR", image: PHOTOS.palaceFacade },
 ];
 
 export const mockHotels: HotelSummary[] = hotelBase.map(({ image, ...h }) => ({
@@ -77,8 +116,8 @@ export const mockHotels: HotelSummary[] = hotelBase.map(({ image, ...h }) => ({
 function hotelImages(cover: string): HotelImage[] {
   return [
     { id: `${cover}-1`, url: cover, altText: null, caption: null, displayOrder: 0, isCover: true },
-    { id: `${cover}-2`, url: PHOTOS.hotelRoom, altText: null, caption: null, displayOrder: 1, isCover: false },
-    { id: `${cover}-3`, url: PHOTOS.valley, altText: null, caption: null, displayOrder: 2, isCover: false },
+    { id: `${cover}-2`, url: PHOTOS.roomWithBalcony, altText: null, caption: null, displayOrder: 1, isCover: false },
+    { id: `${cover}-3`, url: PHOTOS.himalayanLake, altText: null, caption: null, displayOrder: 2, isCover: false },
   ];
 }
 
@@ -183,12 +222,12 @@ const packageBase: Array<{
   ratingCount: number;
   difficultyLevel: TourPackageDetail["difficultyLevel"];
 }> = [
-  { id: "pkg-bike-expedition", title: "Leh Ladakh Bike Expedition", slug: "leh-ladakh-bike-expedition", cityName: "Leh", countryName: "India", image: PHOTOS.bike, durationDays: 7, durationNights: 6, price: 32000, discountPrice: 27999, ratingAverage: 4.7, ratingCount: 184, difficultyLevel: "CHALLENGING" },
-  { id: "pkg-nubra-pangong", title: "Nubra Valley & Pangong Lake Tour", slug: "nubra-valley-pangong-lake-tour", cityName: "Nubra Valley", countryName: "India", image: PHOTOS.lakeBlue, durationDays: 6, durationNights: 5, price: 24500, discountPrice: null, ratingAverage: 4.6, ratingCount: 142, difficultyLevel: "MODERATE" },
-  { id: "pkg-complete-ladakh", title: "Complete Ladakh Discovery", slug: "complete-ladakh-discovery", cityName: "Leh", countryName: "India", image: PHOTOS.monastery, durationDays: 9, durationNights: 8, price: 41000, discountPrice: 36999, ratingAverage: 4.8, ratingCount: 96, difficultyLevel: "MODERATE" },
-  { id: "pkg-chadar-trek", title: "Chadar Trek Adventure", slug: "chadar-trek-adventure", cityName: "Leh", countryName: "India", image: PHOTOS.trekker, durationDays: 8, durationNights: 7, price: 38500, discountPrice: null, ratingAverage: 4.9, ratingCount: 58, difficultyLevel: "EXTREME" },
-  { id: "pkg-markha-valley", title: "Markha Valley Trek", slug: "markha-valley-trek", cityName: "Leh", countryName: "India", image: PHOTOS.riverValley, durationDays: 6, durationNights: 5, price: 22000, discountPrice: 18999, ratingAverage: 4.5, ratingCount: 73, difficultyLevel: "CHALLENGING" },
-  { id: "pkg-srinagar-leh", title: "Srinagar to Leh Road Trip", slug: "srinagar-to-leh-road-trip", cityName: "Srinagar", countryName: "India", image: PHOTOS.mountainRoad, durationDays: 10, durationNights: 9, price: 46000, discountPrice: 39999, ratingAverage: 4.6, ratingCount: 121, difficultyLevel: "MODERATE" },
+  { id: "pkg-bike-expedition", title: "Leh Ladakh Bike Expedition", slug: "leh-ladakh-bike-expedition", cityName: "Leh", countryName: "India", image: PHOTOS.bikeRider, durationDays: 7, durationNights: 6, price: 32000, discountPrice: 27999, ratingAverage: 4.7, ratingCount: 184, difficultyLevel: "CHALLENGING" },
+  { id: "pkg-nubra-pangong", title: "Nubra Valley & Pangong Lake Tour", slug: "nubra-valley-pangong-lake-tour", cityName: "Nubra Valley", countryName: "India", image: PHOTOS.pangongReflection, durationDays: 6, durationNights: 5, price: 24500, discountPrice: null, ratingAverage: 4.6, ratingCount: 142, difficultyLevel: "MODERATE" },
+  { id: "pkg-complete-ladakh", title: "Complete Ladakh Discovery", slug: "complete-ladakh-discovery", cityName: "Leh", countryName: "India", image: PHOTOS.thikseyWithChortens, durationDays: 9, durationNights: 8, price: 41000, discountPrice: 36999, ratingAverage: 4.8, ratingCount: 96, difficultyLevel: "MODERATE" },
+  { id: "pkg-chadar-trek", title: "Chadar Trek Adventure", slug: "chadar-trek-adventure", cityName: "Leh", countryName: "India", image: PHOTOS.chadarTrekkers, durationDays: 8, durationNights: 7, price: 38500, discountPrice: null, ratingAverage: 4.9, ratingCount: 58, difficultyLevel: "EXTREME" },
+  { id: "pkg-markha-valley", title: "Markha Valley Trek", slug: "markha-valley-trek", cityName: "Leh", countryName: "India", image: PHOTOS.markhaTrekkers, durationDays: 6, durationNights: 5, price: 22000, discountPrice: 18999, ratingAverage: 4.5, ratingCount: 73, difficultyLevel: "CHALLENGING" },
+  { id: "pkg-srinagar-leh", title: "Srinagar to Leh Road Trip", slug: "srinagar-to-leh-road-trip", cityName: "Srinagar", countryName: "India", image: PHOTOS.openRoad, durationDays: 10, durationNights: 9, price: 46000, discountPrice: 39999, ratingAverage: 4.6, ratingCount: 121, difficultyLevel: "MODERATE" },
 ];
 
 const CURRENCY = "INR";
@@ -215,8 +254,8 @@ export const mockSpecialOffers = mockPackages.filter((p) => p.discountPrice !== 
 function packageImages(cover: string): PackageImage[] {
   return [
     { id: `${cover}-1`, url: cover, altText: null, caption: null, displayOrder: 0, isCover: true },
-    { id: `${cover}-2`, url: PHOTOS.valley, altText: null, caption: null, displayOrder: 1, isCover: false },
-    { id: `${cover}-3`, url: PHOTOS.starrySky, altText: null, caption: null, displayOrder: 2, isCover: false },
+    { id: `${cover}-2`, url: PHOTOS.glacierValley, altText: null, caption: null, displayOrder: 1, isCover: false },
+    { id: `${cover}-3`, url: PHOTOS.milkyWayOverMonastery, altText: null, caption: null, displayOrder: 2, isCover: false },
   ];
 }
 
@@ -298,22 +337,22 @@ export function findMockPackageDetail(slug: string): TourPackageDetail | null {
 // --- banners / testimonials / blog / faqs ----------------------------------
 
 export const mockBanners: Banner[] = [
-  { id: "banner-1", title: "Discover the Roof of the World", subtitle: "Handcrafted Ladakh journeys, from bike expeditions to gentle valley tours.", imageUrl: PHOTOS.mountainRoad, linkUrl: "/packages", buttonLabel: "Explore Packages" },
-  { id: "banner-2", title: "Camp Under a Million Stars", subtitle: "Pangong Lake and Nubra Valley camping experiences.", imageUrl: PHOTOS.starrySky, linkUrl: "/packages", buttonLabel: "View Offers" },
-  { id: "banner-3", title: "Monasteries, Mountains & More", subtitle: "Curated hotels and homestays across Leh Ladakh.", imageUrl: PHOTOS.monastery, linkUrl: "/hotels", buttonLabel: "Browse Hotels" },
+  { id: "banner-1", title: "Discover the Roof of the World", subtitle: "Handcrafted Ladakh journeys, from bike expeditions to gentle valley tours.", imageUrl: PHOTOS.peaksAboveClouds, linkUrl: "/packages", buttonLabel: "Explore Packages" },
+  { id: "banner-2", title: "Camp Under a Million Stars", subtitle: "Pangong Lake and Nubra Valley camping experiences.", imageUrl: PHOTOS.tentUnderStars, linkUrl: "/packages", buttonLabel: "View Offers" },
+  { id: "banner-3", title: "Monasteries, Mountains & More", subtitle: "Curated hotels and homestays across Leh Ladakh.", imageUrl: PHOTOS.clifftopMonastery, linkUrl: "/hotels", buttonLabel: "Browse Hotels" },
 ];
 
 export const mockTestimonials: Testimonial[] = [
-  { id: "test-1", customerName: "Ananya Sharma", customerAvatarUrl: PHOTOS.avatar1, customerCountryName: "India", rating: 5, message: "The bike expedition was flawlessly organised — every pass, every stay, sorted. Best trip of my life.", packageTitle: "Leh Ladakh Bike Expedition" },
-  { id: "test-2", customerName: "James Whitfield", customerAvatarUrl: PHOTOS.avatar2, customerCountryName: "United Kingdom", rating: 5, message: "Pangong Lake at sunset, exactly as promised. Our guide knew every viewpoint worth stopping for.", packageTitle: "Nubra Valley & Pangong Lake Tour" },
-  { id: "test-3", customerName: "Priya Nair", customerAvatarUrl: PHOTOS.avatar3, customerCountryName: "India", rating: 4, message: "Chadar trek pushed us to our limits in the best way. The crew's experience really showed.", packageTitle: "Chadar Trek Adventure" },
+  { id: "test-1", customerName: "Ananya Sharma", customerAvatarUrl: PHOTOS.avatarAnanya, customerCountryName: "India", rating: 5, message: "The bike expedition was flawlessly organised — every pass, every stay, sorted. Best trip of my life.", packageTitle: "Leh Ladakh Bike Expedition" },
+  { id: "test-2", customerName: "James Whitfield", customerAvatarUrl: PHOTOS.avatarJames, customerCountryName: "United Kingdom", rating: 5, message: "Pangong Lake at sunset, exactly as promised. Our guide knew every viewpoint worth stopping for.", packageTitle: "Nubra Valley & Pangong Lake Tour" },
+  { id: "test-3", customerName: "Priya Nair", customerAvatarUrl: PHOTOS.avatarPriya, customerCountryName: "India", rating: 4, message: "Chadar trek pushed us to our limits in the best way. The crew's experience really showed.", packageTitle: "Chadar Trek Adventure" },
 ];
 
 export const mockBlogPosts: BlogPostSummary[] = [
-  { id: "blog-1", title: "Best Time to Visit Ladakh: A Season-by-Season Guide", slug: "best-time-to-visit-ladakh", excerpt: "From spring blossoms to winter's frozen river, here's when to go and why.", coverImageUrl: PHOTOS.valley, category: "Travel Tips", publishedAt: "2026-03-14T09:00:00Z", readTimeMinutes: 6, authorName: "Tashi Dorjay" },
-  { id: "blog-2", title: "Top 5 Treks in Ladakh for First-Timers", slug: "top-5-treks-in-ladakh", excerpt: "Markha Valley to Stok Kangri — a ranked guide for every fitness level.", coverImageUrl: PHOTOS.trekker, category: "Trekking", publishedAt: "2026-02-02T09:00:00Z", readTimeMinutes: 8, authorName: "Rinchen Angmo" },
-  { id: "blog-3", title: "The Complete Chadar Trek Survival Guide", slug: "chadar-trek-survival-guide", excerpt: "What to pack, how to acclimatise, and what nobody tells you about the frozen river.", coverImageUrl: PHOTOS.riverValley, category: "Trekking", publishedAt: "2026-01-18T09:00:00Z", readTimeMinutes: 10, authorName: "Tashi Dorjay" },
-  { id: "blog-4", title: "Monastery Hopping: A One-Day Leh Itinerary", slug: "monastery-hopping-leh-itinerary", excerpt: "Hemis, Thiksey, and Shey — the loop that fits neatly into a single day.", coverImageUrl: PHOTOS.monastery, category: "Culture", publishedAt: "2025-12-21T09:00:00Z", readTimeMinutes: 5, authorName: "Rinchen Angmo" },
+  { id: "blog-1", title: "Best Time to Visit Ladakh: A Season-by-Season Guide", slug: "best-time-to-visit-ladakh", excerpt: "From spring blossoms to winter's frozen river, here's when to go and why.", coverImageUrl: PHOTOS.autumnValley, category: "Travel Tips", publishedAt: "2026-03-14T09:00:00Z", readTimeMinutes: 6, authorName: "Tashi Dorjay" },
+  { id: "blog-2", title: "Top 5 Treks in Ladakh for First-Timers", slug: "top-5-treks-in-ladakh", excerpt: "Markha Valley to Stok Kangri — a ranked guide for every fitness level.", coverImageUrl: PHOTOS.trekkerOnRidge, category: "Trekking", publishedAt: "2026-02-02T09:00:00Z", readTimeMinutes: 8, authorName: "Rinchen Angmo" },
+  { id: "blog-3", title: "The Complete Chadar Trek Survival Guide", slug: "chadar-trek-survival-guide", excerpt: "What to pack, how to acclimatise, and what nobody tells you about the frozen river.", coverImageUrl: PHOTOS.frozenWaterfall, category: "Trekking", publishedAt: "2026-01-18T09:00:00Z", readTimeMinutes: 10, authorName: "Tashi Dorjay" },
+  { id: "blog-4", title: "Monastery Hopping: A One-Day Leh Itinerary", slug: "monastery-hopping-leh-itinerary", excerpt: "Hemis, Thiksey, and Shey — the loop that fits neatly into a single day.", coverImageUrl: PHOTOS.hemisMonks, category: "Culture", publishedAt: "2025-12-21T09:00:00Z", readTimeMinutes: 5, authorName: "Rinchen Angmo" },
 ];
 
 export function findMockBlogDetail(slug: string): BlogPostDetail | null {
@@ -390,14 +429,14 @@ export const mockSiteContent: SiteContent = {
 };
 
 export const mockGallery: GalleryImage[] = [
-  { id: "gal-1", url: PHOTOS.mountainRoad, altText: "Mountain road through Ladakh", caption: "Leh-Manali Highway", category: "Landscape", displayOrder: 0, isActive: true },
-  { id: "gal-2", url: PHOTOS.lakeBlue, altText: "Pangong Lake", caption: "Pangong Tso", category: "Landscape", displayOrder: 1, isActive: true },
-  { id: "gal-3", url: PHOTOS.monastery, altText: "Ladakhi monastery", caption: "Thiksey Monastery", category: "Culture", displayOrder: 2, isActive: true },
-  { id: "gal-4", url: PHOTOS.camp, altText: "Camping under the stars", caption: "Nubra Valley camp", category: "Camping", displayOrder: 3, isActive: true },
-  { id: "gal-5", url: PHOTOS.desertDunes, altText: "Sand dunes with double-humped camels", caption: "Hunder Dunes", category: "Landscape", displayOrder: 4, isActive: true },
-  { id: "gal-6", url: PHOTOS.starrySky, altText: "Starry night sky over the mountains", caption: "Night sky at Pangong", category: "Landscape", displayOrder: 5, isActive: true },
-  { id: "gal-7", url: PHOTOS.trekker, altText: "Trekker on a mountain trail", caption: "Markha Valley trail", category: "Trekking", displayOrder: 6, isActive: true },
-  { id: "gal-8", url: PHOTOS.bike, altText: "Motorbike on a mountain pass", caption: "Khardung La Pass", category: "Adventure", displayOrder: 7, isActive: true },
+  { id: "gal-1", url: PHOTOS.highwayRider, altText: "A motorbike on the highway through snow-capped mountains", caption: "Leh-Manali Highway", category: "Landscape", displayOrder: 0, isActive: true },
+  { id: "gal-2", url: PHOTOS.pangongShore, altText: "Travellers on the shore of Pangong Lake", caption: "Pangong Tso", category: "Landscape", displayOrder: 1, isActive: true },
+  { id: "gal-3", url: PHOTOS.thikseyHillside, altText: "Thiksey Monastery climbing its hillside", caption: "Thiksey Monastery", category: "Culture", displayOrder: 2, isActive: true },
+  { id: "gal-4", url: PHOTOS.nubraCampAtNight, altText: "The Milky Way over a camp among poplars", caption: "Nubra Valley camp", category: "Camping", displayOrder: 3, isActive: true },
+  { id: "gal-5", url: PHOTOS.hunderCamelRide, altText: "A caravan of double-humped camels crossing the dunes", caption: "Hunder Dunes", category: "Landscape", displayOrder: 4, isActive: true },
+  { id: "gal-6", url: PHOTOS.starsOverRidge, altText: "Starry night sky over the mountains", caption: "Night sky at Pangong", category: "Landscape", displayOrder: 5, isActive: true },
+  { id: "gal-7", url: PHOTOS.markhaTrekkers, altText: "Two trekkers on a rocky valley trail", caption: "Markha Valley trail", category: "Trekking", displayOrder: 6, isActive: true },
+  { id: "gal-8", url: PHOTOS.khardungLaSign, altText: "The Khardung La viewpoint sign above the valley", caption: "Khardung La Pass", category: "Adventure", displayOrder: 7, isActive: true },
 ];
 
 // --- search -----------------------------------------------------------------

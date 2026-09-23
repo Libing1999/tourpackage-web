@@ -39,6 +39,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -74,6 +76,11 @@
   --chart-3: oklch(0.49 0.2 264);
   --chart-4: oklch(0.42 0.17 266);
   --chart-5: oklch(0.34 0.13 265);
+  /* A deep navy band for the one high-contrast section on a page. Unlike
+     --primary it stays dark in dark mode, so the band reads the same way in
+     both themes. */
+  --ink: oklch(0.25 0.09 266);
+  --ink-foreground: oklch(0.985 0.005 250);
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0.004 250);
   --sidebar-foreground: oklch(0.21 0.035 264);
@@ -101,6 +108,8 @@
   --accent: oklch(0.28 0.05 265);
   --accent-foreground: oklch(0.97 0.005 250);
   --destructive: oklch(0.704 0.191 22.216);
+  --ink: oklch(0.2 0.05 265);
+  --ink-foreground: oklch(0.97 0.005 250);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.6 0.15 258);
