@@ -96,7 +96,7 @@ export function SiteFooter() {
                   {settings?.contact_phone ? (
                     <li className="flex items-start gap-2 text-sm text-muted-foreground">
                       <Phone className="mt-0.5 size-4 shrink-0" />
-                      <a href={`tel:${settings.contact_phone}`} className="transition-colors hover:text-primary">
+                      <a href={`tel:${settings.contact_phone.replace(/\s/g, "")}`} className="transition-colors hover:text-primary">
                         {settings.contact_phone}
                       </a>
                     </li>
