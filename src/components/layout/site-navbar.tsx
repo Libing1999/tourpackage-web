@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { MapPin, Menu, Search } from "lucide-react";
 
 import { Logo } from "@/components/common/logo";
 import { ThemeToggle } from "@/components/common/theme-toggle";
@@ -80,6 +80,8 @@ export function SiteNavbar() {
         </div>
 
         <div className={cn("flex items-center gap-1 md:hidden", overlay && "text-white")}>
+          {/* On phones the hero drops its search bar; this icon replaces it. */}
+          {pathname === "/" ? <MobileSearch /> : null}
           <ThemeToggle />
           <Sheet>
             <SheetTrigger render={<Button variant="ghost" size="icon" />}>
@@ -111,5 +113,56 @@ export function SiteNavbar() {
         </div>
       </div>
     </header>
+  );
+}
+
+/** The hero's destination search, opened from an icon in the mobile navbar.
+ * Hands off to the package listing exactly as the hero's search bar does. */
+function MobileSearch() {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [term, setTerm] = useState("");
+
+  function onSearch(e: FormEvent) {
+    e.preventDefault();
+    const q = term.trim();
+    setOpen(false);
+    router.push(q ? `/packages?q=${encodeURIComponent(q)}` : "/packages");
+  }
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger render={<Button variant="ghost" size="icon" />}>
+        <Search className="size-5" />
+        <span className="sr-only">Search</span>
+      </SheetTrigger>
+      <SheetContent side="top" className="p-4 pt-14">
+        <SheetTitle className="sr-only">Search</SheetTitle>
+        <form
+          onSubmit={onSearch}
+          role="search"
+          className="flex w-full flex-col gap-2 rounded-2xl border bg-background p-2 focus-within:ring-4 focus-within:ring-primary/20"
+        >
+          <div className="flex flex-1 items-center gap-2.5 px-3">
+            <MapPin className="size-5 shrink-0 text-primary" aria-hidden="true" />
+            <input
+              autoFocus
+              value={term}
+              onChange={(e) => setTerm(e.target.value)}
+              placeholder="Search destinations, tours, or hotels"
+              aria-label="Search destinations, tours, or hotels"
+              className="h-12 w-full bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+          <button
+            type="submit"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:ring-4 focus-visible:ring-primary/30 focus-visible:outline-none active:scale-[0.98] dark:bg-[oklch(0.34_0.13_265)] dark:text-white dark:hover:bg-[oklch(0.3_0.12_265)]"
+          >
+            <Search className="size-4" aria-hidden="true" />
+            Search
+          </button>
+        </form>
+      </SheetContent>
+    </Sheet>
   );
 }
