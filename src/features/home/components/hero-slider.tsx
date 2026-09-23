@@ -56,7 +56,8 @@ export function HeroSlider() {
   return (
     // -mt-16 pulls the hero up behind the (transparent) sticky navbar so the
     // image fills the top of the screen; pt-16 keeps the content clear of the bar.
-    <section className={`relative flex items-center overflow-hidden bg-ink pt-16 ${HERO_SIZE}`}>
+    // Phones skip the padding so the shorter copy centres on the whole screen.
+    <section className={`relative flex items-center overflow-hidden bg-ink md:pt-16 ${HERO_SIZE}`}>
       {/* The photo settles in from a slight zoom once, on load. */}
       <Image
         src={imageUrl}
@@ -94,11 +95,12 @@ export function HeroSlider() {
         </p>
 
         {/* Destination search: a single bar that hands off to the package
-            listing, the page's primary action. */}
+            listing, the page's primary action. Below md it moves into the
+            navbar as an icon (see SiteNavbar) so the copy sits centred. */}
         <form
           onSubmit={onSearch}
           role="search"
-          className="mt-8 flex w-full max-w-xl animate-rise flex-col gap-2 rounded-2xl bg-white p-2 shadow-[0_24px_60px_-20px_oklch(0.1_0.05_265/0.6)] ring-1 ring-white/60 transition-shadow duration-300 [animation-delay:360ms] focus-within:ring-4 focus-within:ring-white/35 sm:flex-row sm:items-center"
+          className="mt-8 hidden w-full max-w-xl animate-rise flex-col gap-2 rounded-2xl bg-white p-2 shadow-[0_24px_60px_-20px_oklch(0.1_0.05_265/0.6)] ring-1 ring-white/60 transition-shadow duration-300 [animation-delay:360ms] focus-within:ring-4 focus-within:ring-white/35 sm:flex-row sm:items-center md:flex"
         >
           <div className="flex flex-1 items-center gap-2.5 px-3">
             <MapPin className="size-5 shrink-0 text-primary" aria-hidden="true" />
